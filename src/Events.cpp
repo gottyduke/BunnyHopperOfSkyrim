@@ -59,31 +59,17 @@ namespace Events
 		
 		switch (HashAnimation(a_event->tag)) {
 		case Anim::kUp:
-			{
-				Controller::Speed->StepUp();
-				Controller::Strafe->SetBase();
-			}
-			break;
 		case Anim::kFall:
 		case Anim::kDown:
-			{
-				Controller::Speed->SpeedUp();
-				Controller::Speed->ResetCounter();
-			}
-			break;
 		case Anim::kLandEnd:
 			{
-				Controller::Speed->SpeedUp();
-				Controller::Speed->ResetCounter();
-				Controller::Strafe->RecordChanges();
-
+				
 			}
 			break;
 		case Anim::kFootLeft:
 		case Anim::kFootRight:
 		case Anim::kGraphDeleting:
 			{
-				Controller::Speed->CountStop();
 			}
 			break;
 		default: ;

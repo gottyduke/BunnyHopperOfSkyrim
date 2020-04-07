@@ -1,31 +1,96 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Events.cpp" />
-    <ClCompile Include="src\Settings.cpp" />
-    <ClCompile Include="src\Animations.cpp" />
-    <ClCompile Include="src\Speed.cpp" />
-    <ClCompile Include="src\Strafe.cpp" />
-    <ClCompile Include="src\Height.cpp" />
-    <ClCompile Include="src\Crouch.cpp" />
+    <ClCompile Include="src\Events.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Controller.cpp">
+      <Filter>src\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Crouch.cpp">
+      <Filter>src\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Height.cpp">
+      <Filter>src\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ram.cpp">
+      <Filter>src\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Speed.cpp">
+      <Filter>src\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Strafe.cpp">
+      <Filter>src\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Animations.cpp">
+      <Filter>src\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Settings.cpp">
+      <Filter>src\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\version.h" />
-    <ClInclude Include="include\Events.h" />
-    <ClInclude Include="include\FNV1A.h" />
-    <ClInclude Include="include\Settings.h" />
-    <ClInclude Include="include\Animations.h" />
-    <ClInclude Include="include\Speed.h" />
-    <ClInclude Include="include\Strafe.h" />
-    <ClInclude Include="include\Height.h" />
-    <ClInclude Include="include\Controller.h" />
-    <ClInclude Include="include\Crouch.h" />
+    <ClInclude Include="include\Events.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Controller.h">
+      <Filter>include\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Crouch.h">
+      <Filter>include\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Height.h">
+      <Filter>include\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Ram.h">
+      <Filter>include\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Speed.h">
+      <Filter>include\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Strafe.h">
+      <Filter>include\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Animations.h">
+      <Filter>include\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FNV1A.h">
+      <Filter>include\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\version.h">
+      <Filter>include\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Settings.h">
+      <Filter>include\Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="version.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{e2ca810b-5e2c-40f8-96a5-593d03a493e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{e7ccc9b1-df06-4a54-a16b-056d8e048fb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Controller">
+      <UniqueIdentifier>{65089df1-1f50-48a2-bc97-9f4359431850}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Controller">
+      <UniqueIdentifier>{114fb05e-1253-4d38-9510-718f92095598}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Util">
+      <UniqueIdentifier>{57b80a47-26ad-4361-b9b2-4a2292080428}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Util">
+      <UniqueIdentifier>{b4c15890-3cb7-44fe-a0b1-d06f95fd6099}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

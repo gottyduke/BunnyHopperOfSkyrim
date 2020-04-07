@@ -1,4 +1,5 @@
 #include "Speed.h"
+#include "Controller.h"
 
 
 auto SpeedController::GetSingleton()
@@ -26,28 +27,11 @@ void SpeedController::UpdateBaseSpeed()
 		currSpeed = baseSpeed;
 	}
 	
-	player->SetActorValue(RE::ActorValue::kSpeedMult, currSpeed);
-}
-
-
-void SpeedController::ResetJumpHeight()
-{
-	UpdateJumpHeight();
-
-	bhk->jumpHeight = baseHeight;
-
-	currHeight = baseHeight;
-}
-
-
-void SpeedController::UpdateJumpHeight()
-{
-	if (baseHeight == -1) {
-		baseHeight = bhk->jumpHeight;
-		currHeight = baseHeight;
+	if (currSpeed > * Settings::maxSpeed) {
+		currSpeed = *Settings::maxSpeed;
 	}
-
-	bhk->jumpHeight = currHeight;
+	
+	player->SetActorValue(RE::ActorValue::kSpeedMult, currSpeed);
 }
 
 
@@ -56,10 +40,6 @@ void SpeedController::SpeedUp()
 	const float speedBoost = *Settings::globalSpeedMult * (*Settings::baseSpeedBoost * *Settings::baseSpeedBoost);
 
 	currSpeed += speedBoost;
-
-	if (currSpeed > *Settings::maxSpeed) {
-		currSpeed = *Settings::maxSpeed;
-	}
 	
 	UpdateBaseSpeed();
 }
@@ -71,21 +51,11 @@ void SpeedController::CountStop()
 		ResetCounter();
 		
 		ResetBaseSpeed();
-		ResetJumpHeight();
 	}
 }
 
 
-void SpeedController::StepUp()
-{
-	if (currSpeed / 1150 + baseHeight > currHeight) {
-		currHeight = currSpeed / 1150 + baseHeight;
-		UpdateJumpHeight();
-	}
-}
-
-
-void SpeedController::ResetCounter()
+void SpeedController::ResetCounter() noexcept
 {
 	stopCounter = 0;
 }

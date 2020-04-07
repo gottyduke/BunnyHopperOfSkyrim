@@ -25,10 +25,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animations.cpp" />
+    <ClCompile Include="src\Controller.cpp" />
     <ClCompile Include="src\Crouch.cpp" />
     <ClCompile Include="src\Events.cpp" />
     <ClCompile Include="src\Height.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Ram.cpp" />
     <ClCompile Include="src\Settings.cpp" />
     <ClCompile Include="src\Speed.cpp" />
     <ClCompile Include="src\Strafe.cpp" />
@@ -40,6 +42,7 @@
     <ClInclude Include="include\Events.h" />
     <ClInclude Include="include\FNV1A.h" />
     <ClInclude Include="include\Height.h" />
+    <ClInclude Include="include\Ram.h" />
     <ClInclude Include="include\Settings.h" />
     <ClInclude Include="include\Speed.h" />
     <ClInclude Include="include\Strafe.h" />

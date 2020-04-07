@@ -11,20 +11,17 @@ public:
 	
 	static SpeedController* GetSingleton();
 
-
-	void ResetBaseSpeed();
-	void ResetJumpHeight();
-
-	void UpdateBaseSpeed();
-	void UpdateJumpHeight();
 	
 	void SpeedUp();
 	void CountStop();
 
-	void StepUp();
-	
-	inline void ResetCounter();
-	
+	inline void ResetCounter() noexcept;
+
+	// getter
+	[[nodiscard]] constexpr float GetBaseSpeed() const noexcept { return baseSpeed; }
+	[[nodiscard]] constexpr float GetCurrSpeed() const noexcept { return currSpeed; }
+
+	// tor
 	SpeedController(const SpeedController&) = delete;
 	SpeedController(SpeedController&&) = delete;
 
@@ -35,13 +32,13 @@ protected:
 	SpeedController() = default;
 	~SpeedController() = default;
 
+	// methods
+	void ResetBaseSpeed();
+	void UpdateBaseSpeed();
+
 	// members
 	float baseSpeed = -1;
 	float currSpeed = -1;
-
-	float baseHeight = -1;
-	float currHeight = -1;
-	
 	int stopCounter = 0;
 
 	// controllers
