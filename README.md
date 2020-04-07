@@ -11,17 +11,17 @@
 ## Settings
 Setting | Description
 --- | ---
-`globalSpeedMultiplier` | Global speed multiplier
+`globalSpeedMult` | Global speed multiplier
 `baseSpeedBoost` | Base speed gain after each consecutive jump
-`baseSpeedMultiplier` | Base speed gain multiplier
-`minimumStrafeAngle` | Minimum strafing angle to gain a strafe speed boost
-`strafeSpeedMultiplier` | Speed gain multiplier after each successful strafe
-`minimumHeightLaunch` | Minimum height difference to gain a launch boost
-`heightLaunchMultiplier` | Speed gain multiplier after each successful height launch
+`baseSpeedMult` | Base speed gain multiplier
+`minStrafeAngle` | Minimum strafing angle to gain a strafe speed boost
+`strafeSpeedMult` | Speed gain multiplier after each successful strafe
+`minHeightLaunch` | Minimum height difference to gain a launch boost
+`heightLaunchMulti` | Speed gain multiplier after each successful height launch
 `crouchSpeedBoost` | Speed gain for crouching during landing
-`crouchSpeedMultiplier` | Speed gain multiplier after each successful crouch boost
+`crouchSpeedMult` | Speed gain multiplier after each successful crouch boost
 `maxSpeed` | Maximum speed allowed
 `enableTrail` | Enable the visiable ray trail when bhopping
 `ramDamage` | Base damage dealt when ramming objects when bhopping
-`ramDamageMultiplier` | Ram damage multiplier based on current speed
+`ramDamageMult` | Ram damage multiplier based on current speed
 

@@ -7,6 +7,8 @@
     <ClCompile Include="src\Animations.cpp" />
     <ClCompile Include="src\Speed.cpp" />
     <ClCompile Include="src\Strafe.cpp" />
+    <ClCompile Include="src\Height.cpp" />
+    <ClCompile Include="src\Crouch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\version.h" />
@@ -16,6 +18,9 @@
     <ClInclude Include="include\Animations.h" />
     <ClInclude Include="include\Speed.h" />
     <ClInclude Include="include\Strafe.h" />
+    <ClInclude Include="include\Height.h" />
+    <ClInclude Include="include\Controller.h" />
+    <ClInclude Include="include\Crouch.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />

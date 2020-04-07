@@ -1,5 +1,4 @@
 #include "Speed.h"
-#include "Settings.h"
 
 
 auto SpeedController::GetSingleton()

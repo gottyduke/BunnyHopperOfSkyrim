@@ -1,5 +1,8 @@
 #include "Events.h"
 
+#include "Animations.h"
+#include "Controller.h"
+
 #include "RE/Skyrim.h"
 
 
@@ -54,29 +57,33 @@ namespace Events
 
 		//_DMESSAGE(a_event->tag.c_str());
 		
-		auto controller = SpeedController::GetSingleton();
-		auto strafe = StrafeController::GetSingleton();
-		
 		switch (HashAnimation(a_event->tag)) {
 		case Anim::kUp:
 			{
-				controller->StepUp();
-				strafe->RecordChanges();
+				Controller::Speed->StepUp();
+				Controller::Strafe->SetBase();
 			}
 			break;
 		case Anim::kFall:
 		case Anim::kDown:
+			{
+				Controller::Speed->SpeedUp();
+				Controller::Speed->ResetCounter();
+			}
+			break;
 		case Anim::kLandEnd:
 			{
-				controller->SpeedUp();
-				controller->ResetCounter();
+				Controller::Speed->SpeedUp();
+				Controller::Speed->ResetCounter();
+				Controller::Strafe->RecordChanges();
+
 			}
 			break;
 		case Anim::kFootLeft:
 		case Anim::kFootRight:
 		case Anim::kGraphDeleting:
 			{
-				controller->CountStop();
+				Controller::Speed->CountStop();
 			}
 			break;
 		default: ;
