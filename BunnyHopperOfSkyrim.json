@@ -1,0 +1,15 @@
+{
+  "globalSpeedMultiplier": 1.0,
+  "baseSpeedBoost": 2.0,
+  "baseSpeedMultiplier": 1.0,
+  "minimumStrafeAngle": 25.0,
+  "strafeSpeedMultiplier": 1.0,
+  "minimumHeightLaunch": 5.0,
+  "heightLaunchMultiplier": 1.0,
+  "crouchSpeedBoost": 3.0,
+  "crouchBoostMultiplier": 1.0,
+  "maxSpeed": 400.0,
+  "enableTrail": true,
+  "ramDamage": 5.0,
+  "ramDamageMultiplier": 1.0
+}
