@@ -40,34 +40,38 @@ namespace Events
 	}
 
 	
-	auto PlayerJumpHandler::GetSingleton()
-		-> PlayerJumpHandler*
+	auto BHopHandler::GetSingleton()
+	-> BHopHandler*
 	{
-		static PlayerJumpHandler singleton;
+		static BHopHandler singleton;
 		return std::addressof(singleton);
 	}
 
 
-	auto PlayerJumpHandler::ProcessEvent(const RE::BSAnimationGraphEvent* a_event, RE::BSTEventSource<RE::BSAnimationGraphEvent>* a_eventSource)
+	auto BHopHandler::ProcessEvent(const RE::BSAnimationGraphEvent* a_event, RE::BSTEventSource<RE::BSAnimationGraphEvent>* a_eventSource)
 	-> EventResult
 	{
 		if (!a_event || !a_event->holder || !a_event->holder->IsPlayerRef()) {
 			return EventResult::kContinue;
 		}
 
-		//_DMESSAGE(a_event->tag.c_str());
-		
+		Controller controller;
 		switch (HashAnimation(a_event->tag)) {
 		case Anim::kUp:
 		case Anim::kFall:
 		case Anim::kDown:
 		case Anim::kLandEnd:
 			{
-				
+				//controller->TryAccelerate();
 			}
 			break;
 		case Anim::kFootLeft:
 		case Anim::kFootRight:
+			{
+				//controller->CountStop();
+				//controller->TestHeight();
+			}
+			break;
 		case Anim::kGraphDeleting:
 			{
 			}

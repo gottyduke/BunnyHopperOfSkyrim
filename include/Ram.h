@@ -1,21 +1,26 @@
 #pragma once
 
+#include "IController.h"
 #include "RE/Skyrim.h"
 
 
-class RamController
+class RamController final : public IController<RamController>
 {
 public:
-	static RamController* GetSingleton();
-
+	
+	void Halt() noexcept override { Reset(); }
+	
 
 	RamController(const RamController&) = delete;
 	RamController(RamController&&) = delete;
+	RamController();
+	~RamController() = default;
 
 	RamController& operator=(const RamController&) = delete;
 	RamController& operator=(RamController&&) = delete;
 
-protected:
-	RamController() = default;
-	~RamController() = default;
+private:
+
+	void Reset() noexcept override;
+	void Update() noexcept override;
 };

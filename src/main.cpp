@@ -1,8 +1,10 @@
 #include "Events.h"
 #include "version.h"
+#include "Settings.h"
 
 #include "RE/Skyrim.h"
 #include "SKSE/API.h"
+
 
 namespace
 {
@@ -28,7 +30,7 @@ namespace
 
 			const auto player = RE::PlayerCharacter::GetSingleton();
 			if (a_event->formID == player->formID) {
-				AnimationGraphEventHandler(Events::PlayerJumpHandler::GetSingleton());
+				AnimationGraphEventHandler(Events::BHopHandler::GetSingleton());
 			}
 
 			return EventResult::kContinue;
@@ -45,6 +47,7 @@ namespace
 		virtual ~TESObjectLoadedEventHandler() = default;
 	};
 
+
 	void MessageHandler(SKSE::MessagingInterface::Message* a_msg)
 	{
 		switch (a_msg->type) {
@@ -52,9 +55,8 @@ namespace
 			{
 				auto sourceHolder = RE::ScriptEventSourceHolder::GetSingleton();
 				sourceHolder->AddEventSink<RE::TESObjectLoadedEvent>(TESObjectLoadedEventHandler::GetSingleton());
-
-				break;
 			}
+			break;
 		default:;
 		}
 	}
@@ -65,8 +67,7 @@ extern "C"
 {
 	bool SKSEPlugin_Query(const SKSE::QueryInterface* a_skse, SKSE::PluginInfo* a_info)
 	{
-		SKSE::Logger::OpenRelative(FOLDERID_Documents,
-								   L"\\My Games\\Skyrim Special Edition\\SKSE\\BunnyHopperOfSkyrim.log");
+		SKSE::Logger::OpenRelative(FOLDERID_Documents, L"\\My Games\\Skyrim Special Edition\\SKSE\\BunnyHopperOfSkyrim.log");
 		SKSE::Logger::SetPrintLevel(SKSE::Logger::Level::kDebugMessage);
 		SKSE::Logger::SetFlushLevel(SKSE::Logger::Level::kDebugMessage);
 		SKSE::Logger::UseLogStamp(true);
@@ -109,9 +110,12 @@ extern "C"
 		}
 
 		if (Settings::LoadSettings()) {
-			_MESSAGE("Settings loaded succefully");
+			_MESSAGE("Settings successfully loaded");
+		} else {
+			_FATALERROR("Settings failed to load!\n");
+			return false;
 		}
-		
+
 		return true;
 	}
 };

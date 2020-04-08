@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "RE/Skyrim.h"
 
 
@@ -9,25 +8,24 @@ namespace Events
 	bool AnimationGraphEventHandler(RE::BSTEventSink<RE::BSAnimationGraphEvent>* a_sink);
 
 	
-	class PlayerJumpHandler final : public RE::BSTEventSink<RE::BSAnimationGraphEvent>
+	class BHopHandler final : public RE::BSTEventSink<RE::BSAnimationGraphEvent>
 	{
 	public:
 		using EventResult = RE::BSEventNotifyControl;
 
-		static PlayerJumpHandler* GetSingleton();
+		static BHopHandler* GetSingleton();
 
 		EventResult ProcessEvent(const RE::BSAnimationGraphEvent* a_event, RE::BSTEventSource<RE::BSAnimationGraphEvent>* a_eventSource) override;
 
+		BHopHandler(const BHopHandler&) = delete;
+		BHopHandler(BHopHandler&&) = delete;
 
-		PlayerJumpHandler(const PlayerJumpHandler&) = delete;
-		PlayerJumpHandler(PlayerJumpHandler&&) = delete;
-
-		PlayerJumpHandler& operator=(const PlayerJumpHandler&) = delete;
-		PlayerJumpHandler& operator=(PlayerJumpHandler&&) = delete;
+		BHopHandler& operator=(const BHopHandler&) = delete;
+		BHopHandler& operator=(BHopHandler&&) = delete;
 
 	protected:
-		PlayerJumpHandler() = default;
-		~PlayerJumpHandler() = default;
+		BHopHandler() = default;
+		~BHopHandler() = default;
 	};
 
 

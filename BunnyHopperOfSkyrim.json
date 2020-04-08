@@ -1,6 +1,6 @@
 {
   "globalSpeedMult": 1.0,
-  "baseSpeedBoost": 4.0,
+  "baseSpeedBoost": 3.0,
   "baseSpeedMult": 1.0,
   "minStrafeAngle": 35.0,
   "strafeSpeedMult": 1.0,
@@ -8,8 +8,9 @@
   "heightLaunchMult": 1.0,
   "crouchSpeedBoost": 3.0,
   "crouchBoostMult": 1.0,
-  "maxSpeed": 500.0,
+  "misstepAllowed": 4,
+  "maxSpeed": 450.0,
   "enableTrail": true,
   "ramDamage": 5.0,
-  "ramDamageMult": 1.0
+  "ramDamageMult": 0.3
 }

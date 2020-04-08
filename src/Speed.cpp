@@ -1,18 +1,15 @@
 #include "Speed.h"
-#include "Controller.h"
 
 
-auto SpeedController::GetSingleton()
--> SpeedController*
+SpeedController::SpeedController()
 {
-	static SpeedController singleton;
-	return std::addressof(singleton);
+	
 }
 
 
-void SpeedController::ResetBaseSpeed()
+void SpeedController::Reset() noexcept
 {
-	UpdateBaseSpeed();
+	Update();
 	
 	player->SetActorValue(RE::ActorValue::kSpeedMult, baseSpeed);
 	
@@ -20,7 +17,7 @@ void SpeedController::ResetBaseSpeed()
 }
 
 
-void SpeedController::UpdateBaseSpeed()
+void SpeedController::Update() noexcept
 {	
 	if (baseSpeed == -1) {
 		baseSpeed = player->GetActorValue(RE::ActorValue::kSpeedMult);
@@ -41,21 +38,5 @@ void SpeedController::SpeedUp()
 
 	currSpeed += speedBoost;
 	
-	UpdateBaseSpeed();
-}
-
-
-void SpeedController::CountStop()
-{
-	if (++stopCounter == 3) {
-		ResetCounter();
-		
-		ResetBaseSpeed();
-	}
-}
-
-
-void SpeedController::ResetCounter() noexcept
-{
-	stopCounter = 0;
+	Update();
 }

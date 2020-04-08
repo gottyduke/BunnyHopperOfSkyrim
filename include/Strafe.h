@@ -1,11 +1,13 @@
 #pragma once
 
+#include "IController.h"
+
 #include <cmath>  // abs
 
 #include "RE/Skyrim.h"
 
 
-class StrafeController
+class StrafeController final : public IController<StrafeController>
 {
 public:
 	struct NiPoint3
@@ -15,24 +17,24 @@ public:
 		float z;
 	};
 
-	
-	static StrafeController* GetSingleton();
-
 	void RecordChanges();
 	void SetBase();
 	
+	void Halt() noexcept override { Reset(); }
+
 	
 	StrafeController(const StrafeController&) = delete;
 	StrafeController(StrafeController&&) = delete;
+	StrafeController();
+	~StrafeController() = default;
 
 	StrafeController& operator=(const StrafeController&) = delete;
 	StrafeController& operator=(StrafeController&&) = delete;
 
-protected:
-	StrafeController() = default;
-	~StrafeController() = default;
-	
 private:
-	RE::PlayerCharacter* player = RE::PlayerCharacter::GetSingleton();
+
+	void Reset() noexcept override;
+	void Update() noexcept override;
+
 	NiPoint3 pos;
 };

@@ -22,6 +22,8 @@ public:
 	
 	static J2S::fSetting	crouchSpeedBoost;
 	static J2S::fSetting	crouchBoostMult;
+
+	static J2S::iSetting	misttepAllowed;
 	
 	static J2S::fSetting	maxSpeed;
 	

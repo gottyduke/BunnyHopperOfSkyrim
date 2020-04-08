@@ -1,47 +1,41 @@
 #pragma once
 
+#include "IController.h"
 #include "Settings.h"
 
 #include "RE/Skyrim.h"
 
 
-class SpeedController
+class SpeedController final : public IController<SpeedController>
 {
 public:
-	
-	static SpeedController* GetSingleton();
-
-	
+		
 	void SpeedUp();
-	void CountStop();
-
-	inline void ResetCounter() noexcept;
-
-	// getter
+	
+	void Halt() noexcept override { Reset(); }
+	
+	
 	[[nodiscard]] constexpr float GetBaseSpeed() const noexcept { return baseSpeed; }
 	[[nodiscard]] constexpr float GetCurrSpeed() const noexcept { return currSpeed; }
 
-	// tor
+	
 	SpeedController(const SpeedController&) = delete;
 	SpeedController(SpeedController&&) = delete;
+	SpeedController();
+	~SpeedController() = default;
 
 	SpeedController& operator=(const SpeedController&) = delete;
 	SpeedController& operator=(SpeedController&&) = delete;
 	
-protected:
-	SpeedController() = default;
-	~SpeedController() = default;
+private:
 
 	// methods
-	void ResetBaseSpeed();
-	void UpdateBaseSpeed();
+	void Reset() noexcept override;
+	void Update() noexcept override;
 
+	
 	// members
 	float baseSpeed = -1;
 	float currSpeed = -1;
 	int stopCounter = 0;
-
-	// controllers
-	RE::PlayerCharacter* player = RE::PlayerCharacter::GetSingleton();
-	RE::bhkCharacterController* bhk = player->GetCharController();
 };

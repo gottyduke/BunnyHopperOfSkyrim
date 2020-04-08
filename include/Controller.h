@@ -6,28 +6,41 @@
 #include "Speed.h"
 #include "Strafe.h"
 
-#include "Settings.h"
 
-#include "RE/Skyrim.h"
-
-
-namespace Controller
+class Controller
 {
-	struct SubControllers
-	{
-		CrouchController* Crouch = CrouchController::GetSingleton();
-		HeightController* Height = HeightController::GetSingleton();
-		RamController* Ram = RamController::GetSingleton();
-		SpeedController* Speed = SpeedController::GetSingleton();
-		StrafeController* Strafe = StrafeController::GetSingleton();
-	};
-
-	static SubControllers* Ptr = new SubControllers;
-
-	
+public:
 	void TryAccelerate();
-	void CountStop();
-
-	void TryHeightLaunch();
+	void TestHeight();
 	void TryCrouchBoost();
-}
+
+	void CountStop();
+	void HaltProcess();
+
+	constexpr void ResetCounter() noexcept { g_stopCounter = 0; }
+	
+	Controller(const Controller&) = delete;
+	Controller(Controller&&) = delete;
+	Controller();
+	
+	Controller& operator=(const Controller&) = delete;
+	Controller& operator=(Controller&&) = delete;
+	
+	Controller* operator->() { return singleton; }
+	Controller& operator*() { return *singleton; }
+	const Controller* operator->() const { return singleton; }
+	const Controller& operator*() const { return *singleton; }
+	
+private:
+	CrouchController Crouch;
+	StrafeController Strafe;
+	SpeedController Speed;
+	HeightController Height;
+	RamController Ram;
+
+	int g_stopCounter;
+	static Controller* singleton;
+};
+
+
+inline Controller* Controller::singleton;

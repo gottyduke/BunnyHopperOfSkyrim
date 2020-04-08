@@ -1,11 +1,19 @@
 #include "Ram.h"
 
 
-auto RamController::GetSingleton()
--> RamController*
+RamController::RamController()
 {
-	static RamController singleton;
-	return std::addressof(singleton);
+	
 }
 
 
+void RamController::Reset() noexcept
+{
+	
+}
+
+
+void RamController::Update() noexcept
+{
+	
+}

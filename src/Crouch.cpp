@@ -1,9 +1,19 @@
 #include "Crouch.h"
 
 
-auto CrouchController::GetSingleton()
--> CrouchController*
+CrouchController::CrouchController()
 {
-	static CrouchController singleton;
-	return std::addressof(singleton);
+	
+}
+
+
+void CrouchController::Reset() noexcept
+{
+	
+}
+
+
+void CrouchController::Update() noexcept
+{
+	
 }

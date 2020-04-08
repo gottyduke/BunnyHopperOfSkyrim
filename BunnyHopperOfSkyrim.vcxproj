@@ -24,6 +24,26 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="exports.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="version.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Animations.h" />
+    <ClInclude Include="include\Controller.h" />
+    <ClInclude Include="include\Crouch.h" />
+    <ClInclude Include="include\Events.h" />
+    <ClInclude Include="include\FNV1A.h" />
+    <ClInclude Include="include\Height.h" />
+    <ClInclude Include="include\IController.h" />
+    <ClInclude Include="include\Ram.h" />
+    <ClInclude Include="include\Settings.h" />
+    <ClInclude Include="include\Speed.h" />
+    <ClInclude Include="include\Strafe.h" />
+    <ClInclude Include="include\version.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="src\Animations.cpp" />
     <ClCompile Include="src\Controller.cpp" />
     <ClCompile Include="src\Crouch.cpp" />
@@ -34,25 +54,6 @@
     <ClCompile Include="src\Settings.cpp" />
     <ClCompile Include="src\Speed.cpp" />
     <ClCompile Include="src\Strafe.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="include\Animations.h" />
-    <ClInclude Include="include\Controller.h" />
-    <ClInclude Include="include\Crouch.h" />
-    <ClInclude Include="include\Events.h" />
-    <ClInclude Include="include\FNV1A.h" />
-    <ClInclude Include="include\Height.h" />
-    <ClInclude Include="include\Ram.h" />
-    <ClInclude Include="include\Settings.h" />
-    <ClInclude Include="include\Speed.h" />
-    <ClInclude Include="include\Strafe.h" />
-    <ClInclude Include="include\version.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="exports.def" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="version.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

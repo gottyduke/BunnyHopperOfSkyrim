@@ -1,11 +1,21 @@
 #include "Strafe.h"
 
 
-auto StrafeController::GetSingleton()
--> StrafeController*
+StrafeController::StrafeController()
 {
-	static StrafeController singleton;
-	return std::addressof(singleton);
+	
+}
+
+
+void StrafeController::Reset() noexcept
+{
+	
+}
+
+
+void StrafeController::Update() noexcept
+{
+	
 }
 
 
