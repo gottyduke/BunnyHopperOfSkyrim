@@ -1,4 +1,4 @@
-# DynamicEquipmentManagerSSE
+# BunnyHopperOfSkyrim
 
 ## Build Dependencies
 * [Json2Settings](https://github.com/Ryan-rsm-McKenzie/Json2Settings)
