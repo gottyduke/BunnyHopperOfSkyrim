@@ -7,29 +7,93 @@
     <ResourceCompile Include="version.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Settings.h" />
-    <ClInclude Include="include\version.h" />
-    <ClInclude Include="include\Animations.h" />
-    <ClInclude Include="include\FNV1A.h" />
-    <ClInclude Include="include\Events.h" />
-    <ClInclude Include="include\Strafe.h" />
-    <ClInclude Include="include\Speed.h" />
-    <ClInclude Include="include\IController.h" />
-    <ClInclude Include="include\Ram.h" />
-    <ClInclude Include="include\Height.h" />
-    <ClInclude Include="include\Crouch.h" />
-    <ClInclude Include="include\Controller.h" />
+    <ClInclude Include="include\Events.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Controller.h">
+      <Filter>include\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Crouch.h">
+      <Filter>include\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Height.h">
+      <Filter>include\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Ram.h">
+      <Filter>include\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IController.h">
+      <Filter>include\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Speed.h">
+      <Filter>include\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Strafe.h">
+      <Filter>include\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Animations.h">
+      <Filter>include\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FNV1A.h">
+      <Filter>include\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Settings.h">
+      <Filter>include\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="include\version.h">
+      <Filter>include\Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Settings.cpp" />
-    <ClCompile Include="src\Animations.cpp" />
-    <ClCompile Include="src\Events.cpp" />
-    <ClCompile Include="src\Ram.cpp" />
-    <ClCompile Include="src\Speed.cpp" />
-    <ClCompile Include="src\Strafe.cpp" />
-    <ClCompile Include="src\Height.cpp" />
-    <ClCompile Include="src\Crouch.cpp" />
-    <ClCompile Include="src\Controller.cpp" />
+    <ClCompile Include="src\Events.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Controller.cpp">
+      <Filter>src\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Crouch.cpp">
+      <Filter>src\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Height.cpp">
+      <Filter>src\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ram.cpp">
+      <Filter>src\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Speed.cpp">
+      <Filter>src\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Strafe.cpp">
+      <Filter>src\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Animations.cpp">
+      <Filter>src\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Settings.cpp">
+      <Filter>src\Util</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{22dadae0-83c4-4a9f-97f6-f25851b825d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{a5bcd883-df76-46c0-ba4d-0ba69601cbbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Controller">
+      <UniqueIdentifier>{c72bce52-6955-4b80-9fd2-9c740f82a4d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Controller">
+      <UniqueIdentifier>{e327a2e7-ab87-4d4a-ad6e-30750ea4226a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Util">
+      <UniqueIdentifier>{d5f0d224-51fc-47a4-8c2b-68cc36fda404}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Util">
+      <UniqueIdentifier>{7481bcb9-8bca-497c-a5c4-46b01068455b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
