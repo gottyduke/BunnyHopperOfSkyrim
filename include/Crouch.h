@@ -31,5 +31,5 @@ private:
 	void Reset() noexcept override;
 	void Update() noexcept override;
 
-	int jumpCount = 0;
+	int cooldown = 0;
 };

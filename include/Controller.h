@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Settings.h"
+
 
 class Controller
 {
@@ -11,11 +13,12 @@ public:
 	void CaptureStrafe();
 	void TestStrafeBonus();
 	void TryCrouchBoost();
-
+	void TryInitRam();
+	
 	void CountStop();
 	void HaltProcess();
 
-	void ResetCounter() noexcept { g_stopCounter = 0; }
+	void ResetCounter() noexcept { stopCounter = 0; }
 
 	Controller(const Controller&) = delete;
 	Controller(Controller&&) = delete;
@@ -26,6 +29,8 @@ public:
 	Controller& operator=(Controller&&) = delete;
 
 private:
-
-	int g_stopCounter = 0;
+	void cleanUpInit() { if (--cleanUpSteps >= 0) { HaltProcess(); } }
+	
+	int cleanUpSteps = 6;
+	int stopCounter = *Settings::misttepAllowed;
 };

@@ -38,25 +38,3 @@ private:
 	float diff;
 	NiPoint3 pos;
 };
-
-
-inline float __fsqrt(const float& n)
-{
-	static union { int i; float f; } u;
-	u.i = 0x5F375A86 - (*(int*)&n >> 1);
-	return (int(3) - n * u.f * u.f) * n * u.f * 0.5f;
-}
-
-
-inline double __fpow(const double a, const double b)
-{
-	union
-	{
-		double d;
-		int x[2];
-	} u = { a };
-	u.x[1] = static_cast<int>(b * (u.x[1] - 1072632447) + 1072632447);
-	u.x[0] = 0;
-
-	return u.d;
-}

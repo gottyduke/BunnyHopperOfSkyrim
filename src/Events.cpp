@@ -39,15 +39,6 @@ namespace Events
 		return false;
 	}
 
-
-	auto BHopHandler::GetSingleton()
-	-> BHopHandler*
-	{
-		static BHopHandler singleton;
-		return std::addressof(singleton);
-	}
-
-
 	auto BHopHandler::ProcessEvent(const RE::BSAnimationGraphEvent* a_event, RE::BSTEventSource<RE::BSAnimationGraphEvent>* a_eventSource)
 	-> EventResult
 	{
@@ -60,6 +51,7 @@ namespace Events
 		case Anim::kUp:
 			{
 				controller->CaptureStrafe();
+				controller->TryInitRam();
 			}
 			break;
 		case Anim::kFall:
@@ -68,6 +60,7 @@ namespace Events
 			{
 				controller->TryAccelerate();
 				controller->TestStrafeBonus();
+				controller->TryInitRam();
 			}
 			break;
 		case Anim::kLandEnd:
@@ -75,6 +68,7 @@ namespace Events
 				controller->TestStrafeBonus();
 				controller->TestHeightBonus();
 				controller->TryCrouchBoost();
+				controller->TryInitRam();
 			}
 			break;
 		case Anim::kFootLeft:
@@ -86,7 +80,7 @@ namespace Events
 			break;
 		case Anim::kGraphDeleting:
 			{
-				controller->CountStop();
+				controller->HaltProcess();
 			}
 			break;
 		default: ;

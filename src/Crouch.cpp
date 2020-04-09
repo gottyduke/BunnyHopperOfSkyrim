@@ -5,13 +5,13 @@
 
 void CrouchController::Reset() noexcept
 {
-	jumpCount = 0;
+	cooldown = *Settings::crouchBoostCooldown;
 }
 
 
 void CrouchController::Update() noexcept
 {
-	++jumpCount;
+	--cooldown;
 }
 
 
@@ -19,7 +19,7 @@ void CrouchController::GainCrouchBonus()
 {
 	Update();
 
-	if (jumpCount >= *Settings::crouchBoostCooldown) {
+	if (cooldown <= 0) {
 		const auto CrouchBonus = *Settings::globalSpeedMult * *Settings::crouchBoostMult * *Settings::crouchSpeedBoost;
 
 		auto Speed = SpeedController::GetSingleton();

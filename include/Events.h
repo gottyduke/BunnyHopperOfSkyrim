@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Ram.h"
 #include "RE/Skyrim.h"
 
 
@@ -13,15 +14,13 @@ namespace Events
 	public:
 		using EventResult = RE::BSEventNotifyControl;
 
-		static BHopHandler* GetSingleton();
+		static BHopHandler* GetSingleton()
+		{
+			static BHopHandler singleton;
+			return std::addressof(singleton);
+		}
 
 		EventResult ProcessEvent(const RE::BSAnimationGraphEvent* a_event, RE::BSTEventSource<RE::BSAnimationGraphEvent>* a_eventSource) override;
-
-		BHopHandler(const BHopHandler&) = delete;
-		BHopHandler(BHopHandler&&) = delete;
-
-		BHopHandler& operator=(const BHopHandler&) = delete;
-		BHopHandler& operator=(BHopHandler&&) = delete;
 
 	protected:
 		BHopHandler() = default;

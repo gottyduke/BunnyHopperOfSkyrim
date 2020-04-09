@@ -1,5 +1,4 @@
 #include "Controller.h"
-#include "Settings.h"
 
 #include "Crouch.h"
 #include "Height.h"
@@ -17,7 +16,7 @@ auto Controller::GetSingleton()
 
 
 void Controller::TryAccelerate()
-{
+{	
 	auto Speed = SpeedController::GetSingleton();
 	auto Height = HeightController::GetSingleton();
 
@@ -39,6 +38,8 @@ void Controller::TestHeightBonus()
 
 void Controller::CaptureStrafe()
 {
+	cleanUpInit();
+	
 	auto Strafe = StrafeController::GetSingleton();
 
 	Strafe->TryStrafe();
@@ -47,6 +48,8 @@ void Controller::CaptureStrafe()
 
 void Controller::TestStrafeBonus()
 {
+	cleanUpInit();
+	
 	auto Strafe = StrafeController::GetSingleton();
 
 	Strafe->CalcDipChange();
@@ -62,10 +65,20 @@ void Controller::TryCrouchBoost()
 }
 
 
+void Controller::TryInitRam()
+{
+	auto Ram = RamController::GetSingleton();
+
+	Ram->TestRam();
+}
+
+
 void Controller::CountStop()
 {
-	if (++g_stopCounter >= *Settings::misttepAllowed) {
-		g_stopCounter = 0;
+	cleanUpInit();
+	
+	if (++stopCounter >= *Settings::misttepAllowed) {
+		ResetCounter();
 		HaltProcess();
 	}
 }
@@ -73,11 +86,19 @@ void Controller::CountStop()
 
 void Controller::HaltProcess()
 {
+	auto Crouch = CrouchController::GetSingleton();
+	auto Height = HeightController::GetSingleton();
+	auto Ram = RamController::GetSingleton();
 	auto Speed = SpeedController::GetSingleton();
 	auto Strafe = StrafeController::GetSingleton();
-	auto Height = HeightController::GetSingleton();
 
+	Crouch->Halt();
+	Height->Halt();
+	Ram->Halt();
 	Speed->Halt();
 	Strafe->Halt();
-	Height->Halt();
+	
+	ResetCounter();
+
+	// GFx Notify("HaltProcess")
 }
