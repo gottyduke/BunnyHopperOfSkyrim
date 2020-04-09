@@ -1,14 +1,9 @@
 #include "Controller.h"
 #include "Height.h"
 #include "Speed.h"
+#include "Settings.h"
 
-
-HeightController::HeightController() :
-baseJumpHeight(-1),
-currJumpHeight(-1),
-state(State::kNone),
-pos()
-{}
+#include <cmath>
 
 
 void HeightController::Reset() noexcept
@@ -34,12 +29,14 @@ void HeightController::Update() noexcept
 
 void HeightController::CalcHeightDiff()
 {
-	const auto diff = player->GetPositionZ() - pos.z;
-	if (diff > 5) {
+	const auto diff = player->GetPositionZ() - pos;
+	// average height for stairs & hills
+	if (diff >= 68.6f) {
 		state = State::kStair;
 		return;
 	}
-	if (abs(diff) >= *Settings::minHeightLaunch) {
+	if (diff < 0.0f && 
+		abs(diff) >= *Settings::minHeightLaunch) {
 		state = State::kLaunch;
 		return;
 	}
@@ -47,13 +44,16 @@ void HeightController::CalcHeightDiff()
 }
 
 
+// distinguish : This HeightBonus is kJumpHeight not HeightLaunch
 void HeightController::GainHeightBonus()
 {
-	const SpeedController speed;
-	const auto bonusHeight = speed->GetCurrSpeed() / 1000;
-	
+	const auto Speed = SpeedController::GetSingleton();
+	const auto bonusHeight = Speed->GetCurrSpeed() / 1000;
+
 	if (currJumpHeight < baseJumpHeight + bonusHeight) {
 		currJumpHeight = baseJumpHeight + bonusHeight;
+		
+		// GFx Notify("HeightBonus")
 	}
 
 	Update();
@@ -62,17 +62,18 @@ void HeightController::GainHeightBonus()
 
 void HeightController::InitState(const State a_state)
 {
+	auto controller = Controller::GetSingleton();
 	switch (a_state) {
 	case State::kNone: break;
 	case State::kStair:
 		{
-			auto Controller = Controller::GetSingleton();
-			Controller->ResetCounter();
+			controller->ResetCounter();
 		}
 		break;
 	case State::kLaunch:
 		{
-			
+			TryHeightLaunch();
+			controller->ResetCounter();
 		}
 		break;
 	default: break;
@@ -81,7 +82,17 @@ void HeightController::InitState(const State a_state)
 }
 
 
+void HeightController::TryHeightLaunch() const
+{
+	const auto Speed = SpeedController::GetSingleton();
+	const auto diff = player->GetPositionZ() - pos;
+	
+	Speed->SpeedUp(*Settings::globalSpeedMult * *Settings::heightLaunchMult * abs(diff));
+	// GFx Notify("HeightLaunch")
+}
+
+
 void HeightController::ResetPos() noexcept
 {
-	pos.z = player->GetPositionZ();
+	pos = player->GetPositionZ();
 }

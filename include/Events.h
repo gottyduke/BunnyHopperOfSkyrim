@@ -7,7 +7,7 @@ namespace Events
 {
 	bool AnimationGraphEventHandler(RE::BSTEventSink<RE::BSAnimationGraphEvent>* a_sink);
 
-	
+
 	class BHopHandler final : public RE::BSTEventSink<RE::BSAnimationGraphEvent>
 	{
 	public:
@@ -27,6 +27,4 @@ namespace Events
 		BHopHandler() = default;
 		~BHopHandler() = default;
 	};
-
-
 }

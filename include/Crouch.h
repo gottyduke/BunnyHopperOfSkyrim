@@ -4,16 +4,23 @@
 #include "RE/Skyrim.h"
 
 
-class CrouchController final : public IController<CrouchController>
+class CrouchController final : public IController
 {
 public:
 
+	static CrouchController* GetSingleton()
+	{
+		static CrouchController singleton;
+		return std::addressof(singleton);
+	}
+
+	void GainCrouchBonus();
+	
 	void Halt() noexcept override { Reset(); }
 
-	
 	CrouchController(const CrouchController&) = delete;
 	CrouchController(CrouchController&&) = delete;
-	CrouchController();
+	CrouchController() = default;
 	~CrouchController() = default;
 
 	CrouchController& operator=(const CrouchController&) = delete;
@@ -23,4 +30,6 @@ private:
 
 	void Reset() noexcept override;
 	void Update() noexcept override;
+
+	int jumpCount = 0;
 };

@@ -1,5 +1,6 @@
 #include "Events.h"
 #include "version.h"
+#include "Strafe.h"
 #include "Settings.h"
 
 #include "RE/Skyrim.h"
@@ -22,7 +23,7 @@ namespace
 
 
 		auto ProcessEvent(const RE::TESObjectLoadedEvent* a_event, RE::BSTEventSource<RE::TESObjectLoadedEvent>* a_eventSource)
-			-> EventResult override
+		-> EventResult override
 		{
 			if (!a_event) {
 				return EventResult::kContinue;
@@ -57,7 +58,7 @@ namespace
 				sourceHolder->AddEventSink<RE::TESObjectLoadedEvent>(TESObjectLoadedEventHandler::GetSingleton());
 			}
 			break;
-		default:;
+		default: ;
 		}
 	}
 }
@@ -65,57 +66,57 @@ namespace
 
 extern "C"
 {
-	bool SKSEPlugin_Query(const SKSE::QueryInterface* a_skse, SKSE::PluginInfo* a_info)
-	{
-		SKSE::Logger::OpenRelative(FOLDERID_Documents, L"\\My Games\\Skyrim Special Edition\\SKSE\\BunnyHopperOfSkyrim.log");
-		SKSE::Logger::SetPrintLevel(SKSE::Logger::Level::kDebugMessage);
-		SKSE::Logger::SetFlushLevel(SKSE::Logger::Level::kDebugMessage);
-		SKSE::Logger::UseLogStamp(true);
+bool SKSEPlugin_Query(const SKSE::QueryInterface* a_skse, SKSE::PluginInfo* a_info)
+{
+	SKSE::Logger::OpenRelative(FOLDERID_Documents, L"\\My Games\\Skyrim Special Edition\\SKSE\\BunnyHopperOfSkyrim.log");
+	SKSE::Logger::SetPrintLevel(SKSE::Logger::Level::kDebugMessage);
+	SKSE::Logger::SetFlushLevel(SKSE::Logger::Level::kDebugMessage);
+	SKSE::Logger::UseLogStamp(true);
 
-		_MESSAGE("BunnyHopperOfSkyrim v%s", BHOS_VERSION_VERSTRING);
+	_MESSAGE("BunnyHopperOfSkyrim v%s", BHOS_VERSION_VERSTRING);
 
-		a_info->infoVersion = SKSE::PluginInfo::kVersion;
-		a_info->name = "BunnyHopperOfSkyrim";
-		a_info->version = BHOS_VERSION_MAJOR;
+	a_info->infoVersion = SKSE::PluginInfo::kVersion;
+	a_info->name = "BunnyHopperOfSkyrim";
+	a_info->version = BHOS_VERSION_MAJOR;
 
-		if (a_skse->IsEditor()) {
-			_FATALERROR("Loaded in editor, marking as incompatible!\n");
-			return false;
-		}
-
-		const auto ver = a_skse->RuntimeVersion();
-		if (ver <= SKSE::RUNTIME_1_5_39) {
-			_FATALERROR("Unsupported runtime version %s!", ver.GetString().c_str());
-			return false;
-		}
-
-		return true;
+	if (a_skse->IsEditor()) {
+		_FATALERROR("Loaded in editor, marking as incompatible!\n");
+		return false;
 	}
 
-
-	bool SKSEPlugin_Load(const SKSE::LoadInterface* a_skse)
-	{
-		_MESSAGE("BunnyHopperOfSkyrim loaded");
-
-		if (!Init(a_skse)) {
-			return false;
-		}
-
-		const auto messaging = SKSE::GetMessagingInterface();
-		if (messaging->RegisterListener("SKSE", MessageHandler)) {
-			_MESSAGE("Messaging interface registration successful");
-		} else {
-			_FATALERROR("Messaging interface registration failed!\n");
-			return false;
-		}
-
-		if (Settings::LoadSettings()) {
-			_MESSAGE("Settings successfully loaded");
-		} else {
-			_FATALERROR("Settings failed to load!\n");
-			return false;
-		}
-
-		return true;
+	const auto ver = a_skse->RuntimeVersion();
+	if (ver <= SKSE::RUNTIME_1_5_39) {
+		_FATALERROR("Unsupported runtime version %s!", ver.GetString().c_str());
+		return false;
 	}
+
+	return true;
+}
+
+
+bool SKSEPlugin_Load(const SKSE::LoadInterface* a_skse)
+{
+	_MESSAGE("BunnyHopperOfSkyrim loaded");
+	
+	if (!Init(a_skse)) {
+		return false;
+	}
+
+	const auto messaging = SKSE::GetMessagingInterface();
+	if (messaging->RegisterListener("SKSE", MessageHandler)) {
+		_MESSAGE("Messaging interface registration successful");
+	} else {
+		_FATALERROR("Messaging interface registration failed!\n");
+		return false;
+	}
+
+	if (Settings::LoadSettings()) {
+		_MESSAGE("Settings successfully loaded");
+	} else {
+		_FATALERROR("Settings failed to load!\n");
+		return false;
+	}
+	
+	return true;
+}
 };

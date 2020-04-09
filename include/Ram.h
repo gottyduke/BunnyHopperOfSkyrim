@@ -4,16 +4,22 @@
 #include "RE/Skyrim.h"
 
 
-class RamController final : public IController<RamController>
+class RamController final : public IController
 {
 public:
-	
+
+	static RamController* GetSingleton()
+	{
+		static RamController singleton;
+		return std::addressof(singleton);
+	}
+
 	void Halt() noexcept override { Reset(); }
-	
+
 
 	RamController(const RamController&) = delete;
 	RamController(RamController&&) = delete;
-	RamController();
+	RamController() = default;
 	~RamController() = default;
 
 	RamController& operator=(const RamController&) = delete;

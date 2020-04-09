@@ -151,7 +151,8 @@
     </Link>
     <PostBuildEvent>
       <Command>if not exist "D:\Program Files (x86)\Steam\steamapps\common\Skyrim Special Edition\MO2\mods\$(TargetName)\SKSE\Plugins\" mkdir "D:\Program Files (x86)\Steam\steamapps\common\Skyrim Special Edition\MO2\mods\$(TargetName)\SKSE\Plugins\"
-copy /y "$(TargetPath)" "D:\Program Files (x86)\Steam\steamapps\common\Skyrim Special Edition\MO2\mods\$(TargetName)\SKSE\Plugins\$(TargetFileName)"</Command>
+copy /y "$(TargetPath)" "D:\Program Files (x86)\Steam\steamapps\common\Skyrim Special Edition\MO2\mods\$(TargetName)\SKSE\Plugins\$(TargetFileName)"
+call "$(ProjectDir)!QuickUpdateJson.cmd"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

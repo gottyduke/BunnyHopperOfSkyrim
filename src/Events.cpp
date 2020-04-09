@@ -32,14 +32,14 @@ namespace Events
 			if (!sinked) {
 				graphManager->graphs.front()->GetEventSource<RE::BSAnimationGraphEvent>()->AddEventSink(a_sink);
 				_MESSAGE("Registered animation event handler");
-				
+
 				return true;
 			}
 		}
 		return false;
 	}
 
-	
+
 	auto BHopHandler::GetSingleton()
 	-> BHopHandler*
 	{
@@ -55,30 +55,43 @@ namespace Events
 			return EventResult::kContinue;
 		}
 
-		Controller controller;
+		auto controller = Controller::GetSingleton();
 		switch (HashAnimation(a_event->tag)) {
 		case Anim::kUp:
+			{
+				controller->CaptureStrafe();
+			}
+			break;
 		case Anim::kFall:
+		case Anim::kFallDirectional:
 		case Anim::kDown:
+			{
+				controller->TryAccelerate();
+				controller->TestStrafeBonus();
+			}
+			break;
 		case Anim::kLandEnd:
 			{
-				//controller->TryAccelerate();
+				controller->TestStrafeBonus();
+				controller->TestHeightBonus();
+				controller->TryCrouchBoost();
 			}
 			break;
 		case Anim::kFootLeft:
 		case Anim::kFootRight:
 			{
-				//controller->CountStop();
-				//controller->TestHeight();
+				controller->CountStop();
+				controller->TestHeightBonus();
 			}
 			break;
 		case Anim::kGraphDeleting:
 			{
+				controller->CountStop();
 			}
 			break;
 		default: ;
 		}
-		
+
 		return EventResult::kContinue;
 	}
 }
