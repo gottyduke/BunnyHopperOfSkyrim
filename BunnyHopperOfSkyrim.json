@@ -21,7 +21,7 @@
   "ramDamage": 5.0,
   "ramDamageMult": 0.3,
   "ramSpeedThreshold": 220.0,
-  "ramSelfReduction": 50.0,
+  "ramSelfReduction": 0.5,
 
   "enableTrail": true
 }

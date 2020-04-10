@@ -31,6 +31,5 @@ void SpeedController::SpeedUp(const float a_speedOffset)
 {
 	const float speedBoost = *Settings::globalSpeedMult * *Settings::baseSpeedBoost * *Settings::baseSpeedMult;
 	currSpeed += speedBoost + a_speedOffset;
-	
 	Update();
 }

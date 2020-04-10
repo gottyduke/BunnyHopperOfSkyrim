@@ -47,11 +47,14 @@ namespace Events
 		}
 
 		auto controller = Controller::GetSingleton();
+		if (--safeStartCountdown >= 0) {
+			controller->HaltProcess();
+		}
+		
 		switch (HashAnimation(a_event->tag)) {
 		case Anim::kUp:
 			{
 				controller->CaptureStrafe();
-				controller->TryInitRam();
 			}
 			break;
 		case Anim::kFall:
@@ -60,7 +63,6 @@ namespace Events
 			{
 				controller->TryAccelerate();
 				controller->TestStrafeBonus();
-				controller->TryInitRam();
 			}
 			break;
 		case Anim::kLandEnd:
@@ -76,6 +78,7 @@ namespace Events
 			{
 				controller->CountStop();
 				controller->TestHeightBonus();
+				controller->TryInitRam();
 			}
 			break;
 		case Anim::kGraphDeleting:

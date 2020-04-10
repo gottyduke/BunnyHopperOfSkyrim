@@ -4,6 +4,7 @@
 
 #include "RE/Skyrim.h"
 
+
 class StrafeController final : public IController
 {
 public:
@@ -27,14 +28,11 @@ public:
 	StrafeController& operator=(const StrafeController&) = delete;
 	StrafeController& operator=(StrafeController&&) = delete;
 
-private:
-
-	[[nodiscard]] inline float FastTrig(float a_b, float a_c) const noexcept;
-	
+private:	
 	void Reset() noexcept override;
 	void Update() noexcept override;
 
 	float scale;
 	float diff;
-	NiPoint3 pos;
+	Coord2 pos;
 };

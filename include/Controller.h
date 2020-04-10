@@ -29,8 +29,5 @@ public:
 	Controller& operator=(Controller&&) = delete;
 
 private:
-	void cleanUpInit() { if (--cleanUpSteps >= 0) { HaltProcess(); } }
-	
-	int cleanUpSteps = 6;
-	int stopCounter = *Settings::misttepAllowed;
+	int stopCounter = 2147483646;
 };

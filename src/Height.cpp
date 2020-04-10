@@ -3,7 +3,7 @@
 #include "Speed.h"
 #include "Settings.h"
 
-#include <cmath>
+#include <cmath>  // fabs
 
 
 void HeightController::Reset() noexcept
@@ -87,7 +87,7 @@ void HeightController::TryHeightLaunch() const
 	const auto Speed = SpeedController::GetSingleton();
 	const auto diff = player->GetPositionZ() - pos;
 	
-	Speed->SpeedUp(*Settings::globalSpeedMult * *Settings::heightLaunchMult * abs(diff));
+	Speed->SpeedUp(*Settings::globalSpeedMult * *Settings::heightLaunchMult * fabs(diff));
 	// GFx Notify("HeightLaunch")
 }
 

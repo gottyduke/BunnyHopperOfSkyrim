@@ -43,6 +43,9 @@
     <ClInclude Include="include\version.h">
       <Filter>include\Util</Filter>
     </ClInclude>
+    <ClInclude Include="include\Visual.h">
+      <Filter>include\Controller</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Events.cpp">
@@ -74,6 +77,9 @@
     </ClCompile>
     <ClCompile Include="src\Settings.cpp">
       <Filter>src\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Visual.cpp">
+      <Filter>src\Controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

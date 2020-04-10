@@ -37,9 +37,7 @@ void Controller::TestHeightBonus()
 
 
 void Controller::CaptureStrafe()
-{
-	cleanUpInit();
-	
+{	
 	auto Strafe = StrafeController::GetSingleton();
 
 	Strafe->TryStrafe();
@@ -47,9 +45,7 @@ void Controller::CaptureStrafe()
 
 
 void Controller::TestStrafeBonus()
-{
-	cleanUpInit();
-	
+{	
 	auto Strafe = StrafeController::GetSingleton();
 
 	Strafe->CalcDipChange();
@@ -74,9 +70,7 @@ void Controller::TryInitRam()
 
 
 void Controller::CountStop()
-{
-	cleanUpInit();
-	
+{	
 	if (++stopCounter >= *Settings::misttepAllowed) {
 		ResetCounter();
 		HaltProcess();
