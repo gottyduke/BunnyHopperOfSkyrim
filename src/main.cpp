@@ -116,7 +116,6 @@ bool SKSEPlugin_Load(const SKSE::LoadInterface* a_skse)
 		_FATALERROR("Settings failed to load!\n");
 		return false;
 	}
-	
 	return true;
 }
-};
+}

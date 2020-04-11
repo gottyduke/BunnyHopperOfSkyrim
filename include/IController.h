@@ -18,7 +18,8 @@ namespace
 		float z;
 	};
 
-	
+
+	// fast square root
 	[[nodiscard]] float __fsqrt(const float& n)
 	{
 		static union { int i; float f; } u;
@@ -27,53 +28,37 @@ namespace
 	}
 
 
-	[[nodiscard]] double __fpow(const double a, const double b)
+	// distance between 2d points
+	[[nodiscard]] auto CalcDistance2D(const Coord2& P1, const Coord2& P2) noexcept
+	-> double
 	{
-		union
-		{
-			double d;
-			int x[2];
-		} u = { a };
-		u.x[1] = static_cast<int>(b * (u.x[1] - 1072632447) + 1072632447);
-		u.x[0] = 0;
-
-		return u.d;
+		return __fsqrt(pow(P1.x - P2.x, 2) + pow(P1.y - P2.y, 2));
 	}
 
 
-	// for hypotenuse when strafe
-	[[nodiscard]] auto CalcDistance2D(const Coord2& a_co_1, const Coord2& a_co_2) noexcept
+	// distance between 3d points
+	[[nodiscard]] auto CalcDistance3D(const Coord3& P1, const Coord3& P2) noexcept
 	-> double
 	{
-		return __fsqrt(__fpow(a_co_1.x - a_co_2.x, 2) + __fpow(a_co_1.y - a_co_2.y, 2));
+		return __fsqrt(pow(P1.x - P2.x, 2) + pow(P1.y - P2.y, 2) + pow(P1.z - P2.z, 2));
 	}
 
 
-	// for projectile angle when ram
-	[[nodiscard]] auto CalcDistance3D(const Coord3& a_co_1, const Coord3& a_co_2) noexcept
+	// diffY / hypo
+	[[nodiscard]] auto CalcAngle2D(const Coord2& P1, const Coord2& P2) noexcept
 	-> double
 	{
-		return __fsqrt(__fpow(a_co_1.x - a_co_2.x, 2) + __fpow(a_co_1.y - a_co_2.y, 2) + __fpow(a_co_1.z - a_co_2.z, 2));
-	}
-
-
-	[[nodiscard]] auto CalcAngle2D(const Coord2& a_co_1, const Coord2& a_co_2) noexcept
-	-> double
-	{
-		const auto hypo = CalcDistance2D(a_co_1, a_co_2);
-		const auto rad = acos((__fpow(hypo, 2) + __fpow(a_co_1.y - a_co_2.y, 2) - __fpow(a_co_1.x - a_co_2.x, 2)) / (2 * hypo * fabs(a_co_1.y - a_co_2.y)));
+		const auto rad = acos((P1.y - P2.y) / CalcDistance2D(P1, P2));
 		return rad * (180.0 / 3.141592653589793238463);
 	}
 
 
-	[[nodiscard]] auto CalcAngle3D(const Coord3& a_co_1, const Coord3& a_co_2) noexcept
+	// diffX / hypo
+	[[nodiscard]] auto CalcAngle3D(const Coord3& P1, const Coord3& P2) noexcept
 	-> double
 	{
-		const auto height = fabs(a_co_1.z - a_co_2.z);
-		const auto base = CalcDistance2D(a_co_1, a_co_2);
-		const auto hypo = __fsqrt(__fpow(base, 2) + __fpow(height, 2));
-		const auto rad = acos((__fpow(hypo, 2) + __fpow(base, 2) - __fpow(height, 2)) / (2 * hypo * height));
-		return rad * (180.0 / 3.141592653589793238463);
+		const auto theta = acos(CalcDistance2D(P1, P2) / CalcDistance3D(P1, P2));
+		return theta * (180.0 / 3.141592653589793238463);
 	}
 }
 

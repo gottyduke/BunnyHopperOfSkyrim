@@ -19,7 +19,7 @@ void StrafeController::Reset() noexcept
 
 void StrafeController::Update() noexcept
 {
-	diff = CalcAngle2D(Coord2{ player->GetPositionX(), pos.x }, Coord2{ player->GetPositionY(), pos.y });
+	diff = CalcAngle2D(Coord2{ player->GetPositionX(), player->GetPositionY() }, pos);
 }
 
 
@@ -52,7 +52,7 @@ void StrafeController::GainStrafeBonud() const
 			                         : diff - *Settings::strafeDeadzone;
 
 		// bi-directional
-		StrafeBonus /= 2;
+		StrafeBonus /= 4;
 		Speed->SpeedUp(*Settings::globalSpeedMult * *Settings::strafeSpeedMult * StrafeBonus);
 		// GFx Notify("StrafeBonus")
 	}

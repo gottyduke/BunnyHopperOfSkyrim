@@ -9,7 +9,7 @@
 
 void RamController::Reset() noexcept
 {
-	cooldownActor.clear();
+	// suppose to reset
 }
 
 
@@ -29,7 +29,7 @@ void RamController::Update() noexcept
 void RamController::TestRam()
 {
 	const auto Speed = SpeedController::GetSingleton();
-	
+
 	Update();
 	if (Speed->GetCurrSpeed() >= *Settings::ramSpeedThreshold) {
 		//Update();
@@ -37,41 +37,37 @@ void RamController::TestRam()
 }
 
 
-// swingby range : 60x60 ft
-// knockback range : 48x48 ft
-// ram range : 36x36 ft
-// immunity reset distance : 640 ft
-void RamController::TestRange(RE::Actor* a_actor) noexcept
+void RamController::TestRange(RE::Actor* a_actor) const noexcept
 {
 	if (player->GetPositionZ() - a_actor->GetPositionZ() >= 64.0f) {
 		return;
 	}
-	
+
 	if (!a_actor->Is3DLoaded()) {
 		return;
 	}
+
+	const float distance = CalcDistance2D(
+		Coord2{
+			player->GetPositionX(),
+			player->GetPositionY()},
+		Coord2{
+			a_actor->GetPositionX(),
+			a_actor->GetPositionY()});
 	
-	const auto distance = CalcDistance2D(Coord2{player->GetPositionX(), player->GetPositionY()}, Coord2{a_actor->GetPositionX(), a_actor->GetPositionY()});
-	if (distance >= 640.0f) {
-		cooldownActor.erase(a_actor);
+	if (distance < 24.0f || distance > 60.0f) {
 		return;
 	}
-	if (distance > 60.0f || distance < 24.0f) {
-		return;
-	}
-	if (cooldownActor.count(a_actor) != 1) {
-		if (distance <= 36.0f) {
-			_DMESSAGE("Rammed %s", a_actor->GetName());
-			hkp->ApplyForce(a_actor, 1.0f);
-		} else if (distance <= 48.0f) {
-			_DMESSAGE("Knockback %s", a_actor->GetName());
-			hkp->ApplyForce(a_actor, 0.5f);
-		} else if (distance <= 60.0f) {
-			_DMESSAGE("Swingby %s", a_actor->GetName());
-			hkp->ApplyForce(a_actor, 0.1f);
-		}
-		_DMESSAGE("%f", distance);
-		cooldownActor.insert(a_actor);
+
+	if (distance <= 44.0f) {
+		_DMESSAGE("Rammed %s %x", a_actor->GetName(), a_actor->GetFormID());
+		hkp->ApplyForce(a_actor, 1.0f);
+	} else if (distance <= 55.0f) {
+		_DMESSAGE("Knockback %s %x", a_actor->GetName(), a_actor->GetFormID());
+		hkp->ApplyForce(a_actor, 0.5f);
+	} else if (distance <= 66.0f) {
+		_DMESSAGE("Swingby %s %x", a_actor->GetName(), a_actor->GetFormID());
+		hkp->ApplyForce(a_actor, 0.1f);
 	}
 }
 
@@ -97,21 +93,22 @@ void RamController::ForceImpl::ApplyForce(RE::Actor* a_target, const float a_mul
 {
 	const auto speed = SpeedController::GetSingleton();
 	const auto player = RE::PlayerCharacter::GetSingleton();
-	
+
 	const float strength = a_mult * (speed->GetCurrSpeed() + *Settings::ramSpeedThreshold);
-	const float damage = a_mult * (speed->GetCurrSpeed() + *Settings::ramSpeedThreshold) * *Settings::ramDamage * *Settings::ramDamageMult;
+	const float damage = strength * *Settings::ramDamage * *Settings::ramDamageMult;
 
 	force->effects[0]->effectItem.magnitude = strength;
 
 	if (a_target->GetActorValue(RE::ActorValue::kHealth) <= damage) {
-		a_target->KillImpl(a_target, damage, false, true);
-	} else {
-		a_target->AddSpell(force);
-		a_target->SetActorValue(RE::ActorValue::kHealth, a_target->GetActorValue(RE::ActorValue::kHealth) - damage);
+		a_target->KillImpl(player, damage, true, true);
 	}
-	player->SetActorValue(RE::ActorValue::kHealth, a_target->GetClampedActorValue(RE::ActorValue::kHealth) - damage * *Settings::ramSelfReduction);
+	a_target->SetActorValue(RE::ActorValue::kHealth, a_target->GetActorValue(RE::ActorValue::kHealth) - damage);
 
-	ImpulseData impData{ a_target, player, strength };
+	player->SetActorValue(RE::ActorValue::kHealth, a_target->GetActorValue(RE::ActorValue::kHealth) - damage * *Settings::ramSelfReduction);
+
+	//speed->SpeedUp(-1 * strength); // For every action, there is an equal and opposite reaction.
+	
+	ImpulseData impData{ a_target, player, strength, force };
 
 	// send an impulse
 	const auto task = SKSE::GetTaskInterface();
@@ -119,35 +116,53 @@ void RamController::ForceImpl::ApplyForce(RE::Actor* a_target, const float a_mul
 	{
 		std::thread impulse([impData]() -> void
 		{
-			// calc impulse vector
-			Coord3 coords[]{
-				{
-					impData.source->GetPositionX(),
-					impData.source->GetPositionY(),
-					impData.source->GetPositionZ()
-				},
-				{
-					impData.target->GetPositionX(),
-					impData.target->GetPositionY(),
-					impData.target->GetPositionZ() + IMPULSE_Z_OFFSET  // impulse offset
-				}};
-			const auto delta = CalcAngle2D(coords[0], coords[1]);
-			const auto theta = CalcAngle3D(coords[0], coords[1]);
-			const auto xVelocity = impData.strength * cosf(theta);
-			const auto zVelocity = impData.strength * sinf(theta);
-			const auto zDisplacement = impData.strength * sinf(theta) * IMPULSE_KEY_FRAME - 0.5f * IMPULSE_GRAVITY * __fpow(IMPULSE_KEY_FRAME, 2);
-			const auto xDisplacement = xVelocity * IMPULSE_KEY_FRAME;
-
-			_DMESSAGE("\ndelta %f\ntheta %f", delta, theta);
-			while (zVelocity >= 0.0f) {
-				impData.target->data.location.x += xDisplacement;
-				
-				impData.target->data.location.z += zDisplacement;
-				
-				
-				std::this_thread::sleep_for(std::chrono::milliseconds(IMPULSE_GAP_FRAME));
+			double theta;
+			double phi;
+			{
+				Coord3 Points[]{
+					{
+						impData.source->GetPositionX(),
+						impData.source->GetPositionY(),
+						impData.source->GetPositionZ()
+					},
+					{
+						impData.target->GetPositionX(),
+						impData.target->GetPositionY(),
+						impData.target->GetPositionZ()
+					}
+				};
+				theta = CalcAngle3D(Points[0], Points[1]);
+				phi = CalcAngle2D(Points[0], Points[1]);
 			}
-		});
+			
+			const auto xVelocity = impData.strength * cos(theta) * cos(phi) / 60;
+			const auto yVelocity = impData.strength * cos(theta) * sin(phi) / 60;
+			const auto zVelocity = impData.strength * sin(theta) / 60;
+			
+			_DMESSAGE("\n%f\n%f\n%f", xVelocity, yVelocity, zVelocity);
+
+			const auto xDisplacement = xVelocity * IMPULSE_KEY_PER_FRAME;
+			const auto yDisplacement = yVelocity * IMPULSE_KEY_PER_FRAME;
+			const auto zDisplacement = zVelocity * IMPULSE_KEY_PER_FRAME;
+
+			_DMESSAGE("\n%f\n%f\n%f", xDisplacement, yDisplacement, zDisplacement);
+			
+			auto ui = RE::UI::GetSingleton();
+			auto iter = 0;
+			while (!ui->GameIsPaused() || iter > 300) {
+				impData.target->DispellEffectsWithArchetype(RE::MagicTarget::Archetype::kStagger, true);
+
+				impData.target->AddSpell(impData.force);
+
+				impData.target->data.location.x += xDisplacement;
+				impData.target->data.location.y += yDisplacement;
+				impData.target->data.location.z += zDisplacement;
+
+				std::this_thread::sleep_for(std::chrono::milliseconds(16));
+				++iter;
+			}
+
+			});
 		impulse.detach();
 	});
 }

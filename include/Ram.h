@@ -1,14 +1,18 @@
 #pragma once
 
-constexpr int IMPULSE_KEY_FRAME = 16;
-constexpr int IMPULSE_SMOOTH_FRAME = 4;
-constexpr int IMPULSE_GAP_FRAME = IMPULSE_KEY_FRAME / IMPULSE_SMOOTH_FRAME;
-constexpr float IMPULSE_GRAVITY = 2.22f;
-constexpr float IMPULSE_Z_OFFSET = 10.0f;
+#define IMPULSE_KEY_PER_FRAME 2
+#define IMPULSE_VALIDATE_COUNT 3
+
+#define IMPULSE_GRAVITY 9.8f
+#define IMPULSE_DAMPING 2.0f
+#define IMPULSE_X_OFFSET 10.0f
+#define IMPULSE_Y_OFFSET 10.0f
+#define IMPULSE_Z_OFFSET 10.0f
+
+#define IMPULSE_TO_DISPLACEMENT(V, A) ((V) * IMPULSE_KEY_PER_FRAME - (A) * 0.5f * pow(IMPULSE_KEY_PER_FRAME, 2))
+#define IMPULSE_VALIDATE_COLLISION(X, Y, Z) ()
 
 #include "IController.h"
-
-#include <unordered_set>  // unordered_set
 
 #include "RE/Skyrim.h"
 
@@ -25,8 +29,9 @@ public:
 			RE::Actor* target;
 			RE::Actor* source;
 			float strength;
+			RE::SpellItem* force;
 		};
-		STATIC_ASSERT(sizeof(ImpulseData) == 0x18);
+		STATIC_ASSERT(sizeof(ImpulseData) == 0x20);
 		
 		ForceImpl();
 
@@ -55,19 +60,18 @@ public:
 
 	RamController(const RamController&) = delete;
 	RamController(RamController&&) = delete;
-	RamController() { hkp = new ForceImpl(); }
+	RamController() { hkp = new ForceImpl; }
 	~RamController() { delete hkp; }
 
 	RamController& operator=(const RamController&) = delete;
 	RamController& operator=(RamController&&) = delete;
 
 private:
-	void TestRange(RE::Actor* a_actor) noexcept;
+	void TestRange(RE::Actor* a_actor) const noexcept;
 	
 	void Reset() noexcept override;
 	void Update() noexcept override;
 
-	std::unordered_set<RE::Actor*> cooldownActor;
 	ForceImpl* hkp;
 };
-STATIC_ASSERT(sizeof(RamController) == 0x68);
+STATIC_ASSERT(sizeof(RamController) == 0x28);
