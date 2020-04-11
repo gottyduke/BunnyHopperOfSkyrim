@@ -38,10 +38,10 @@ public:
 	static J2S::fSetting ramDamageMult;
 	static J2S::fSetting ramSpeedThreshold;
 	static J2S::fSetting ramSelfReduction;
+	static J2S::bSetting enableSimulation;
 	
 	// visual
 	static J2S::bSetting enableTrail;
-
 	
 	Settings() = delete;
 

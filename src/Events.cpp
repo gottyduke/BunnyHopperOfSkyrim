@@ -45,7 +45,7 @@ namespace Events
 		if (!a_event || !a_event->holder || !a_event->holder->IsPlayerRef()) {
 			return EventResult::kContinue;
 		}
-
+		
 		auto controller = Controller::GetSingleton();
 		if (--safeStartCountdown >= 0) {
 			controller->HaltProcess();
@@ -54,36 +54,30 @@ namespace Events
 		switch (HashAnimation(a_event->tag)) {
 		case Anim::kUp:
 			{
-				controller->CaptureStrafe();
+				controller->OnJumping();
 			}
 			break;
 		case Anim::kFall:
 		case Anim::kFallDirectional:
 		case Anim::kDown:
 			{
-				controller->TryAccelerate();
-				controller->TestStrafeBonus();
+				controller->OnFalling();
 			}
 			break;
 		case Anim::kLandEnd:
 			{
-				controller->TestStrafeBonus();
-				controller->TestHeightBonus();
-				controller->TryCrouchBoost();
-				controller->TryInitRam();
+				controller->OnLanding();
 			}
 			break;
 		case Anim::kFootLeft:
 		case Anim::kFootRight:
 			{
-				controller->CountStop();
-				controller->TestHeightBonus();
-				controller->TryInitRam();
+				controller->OnGround();
 			}
 			break;
 		case Anim::kGraphDeleting:
 			{
-				controller->HaltProcess();
+				controller->OnDelete();
 			}
 			break;
 		default: ;
@@ -91,4 +85,19 @@ namespace Events
 
 		return EventResult::kContinue;
 	}
+
+
+	auto LoadGameHandler::ProcessEvent(const RE::TESLoadGameEvent* a_event, RE::BSTEventSource<RE::TESLoadGameEvent>* a_eventSource)
+	-> EventResult
+	{
+		if (!a_event) {
+			return EventResult::kContinue;
+		}
+
+		auto controller = Controller::GetSingleton();
+		controller->HaltProcess();
+		
+		return EventResult::kContinue;
+	}
+
 }

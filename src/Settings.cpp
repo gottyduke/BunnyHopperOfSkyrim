@@ -37,5 +37,6 @@ decltype(Settings::ramDamage) Settings::ramDamage("ramDamage", 5.0f);
 decltype(Settings::ramDamageMult) Settings::ramDamageMult("ramDamageMult", 0.2f);
 decltype(Settings::ramSpeedThreshold) Settings::ramSpeedThreshold("ramSpeedThreshold", 220.0f);
 decltype(Settings::ramSelfReduction) Settings::ramSelfReduction("ramSelfReduction", 0.5f);
+decltype(Settings::enableSimulation) Settings::enableSimulation("enableSimulation", false);
 
 decltype(Settings::enableTrail) Settings::enableTrail("enableTrail", true);

@@ -9,15 +9,15 @@
 
 namespace
 {
-	class TESObjectLoadedEventHandler final : public RE::BSTEventSink<RE::TESObjectLoadedEvent>
+	class TESObjectLoadedHandler final : public RE::BSTEventSink<RE::TESObjectLoadedEvent>
 	{
 	public:
 		using EventResult = RE::BSEventNotifyControl;
 
 
-		static TESObjectLoadedEventHandler* GetSingleton()
+		static TESObjectLoadedHandler* GetSingleton()
 		{
-			static TESObjectLoadedEventHandler singleton;
+			static TESObjectLoadedHandler singleton;
 			return std::addressof(singleton);
 		}
 
@@ -37,15 +37,15 @@ namespace
 			return EventResult::kContinue;
 		}
 
-		TESObjectLoadedEventHandler(const TESObjectLoadedEventHandler&) = delete;
-		TESObjectLoadedEventHandler(TESObjectLoadedEventHandler&&) = delete;
+		TESObjectLoadedHandler(const TESObjectLoadedHandler&) = delete;
+		TESObjectLoadedHandler(TESObjectLoadedHandler&&) = delete;
 
-		TESObjectLoadedEventHandler& operator=(const TESObjectLoadedEventHandler&) = delete;
-		TESObjectLoadedEventHandler& operator=(TESObjectLoadedEventHandler&&) = delete;
+		TESObjectLoadedHandler& operator=(const TESObjectLoadedHandler&) = delete;
+		TESObjectLoadedHandler& operator=(TESObjectLoadedHandler&&) = delete;
 
 	protected:
-		TESObjectLoadedEventHandler() = default;
-		virtual ~TESObjectLoadedEventHandler() = default;
+		TESObjectLoadedHandler() = default;
+		virtual ~TESObjectLoadedHandler() = default;
 	};
 
 
@@ -55,7 +55,7 @@ namespace
 		case SKSE::MessagingInterface::kDataLoaded:
 			{
 				auto sourceHolder = RE::ScriptEventSourceHolder::GetSingleton();
-				sourceHolder->AddEventSink<RE::TESObjectLoadedEvent>(TESObjectLoadedEventHandler::GetSingleton());
+				sourceHolder->AddEventSink<RE::TESObjectLoadedEvent>(TESObjectLoadedHandler::GetSingleton());
 			}
 			break;
 		default: ;

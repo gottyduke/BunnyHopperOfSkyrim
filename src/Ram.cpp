@@ -7,9 +7,10 @@
 
 #include "SKSE/API.h"
 
+
 void RamController::Reset() noexcept
 {
-	// suppose to reset
+	simulate = false;
 }
 
 
@@ -99,70 +100,80 @@ void RamController::ForceImpl::ApplyForce(RE::Actor* a_target, const float a_mul
 
 	force->effects[0]->effectItem.magnitude = strength;
 
-	if (a_target->GetActorValue(RE::ActorValue::kHealth) <= damage) {
-		a_target->KillImpl(player, damage, true, true);
-	}
-	a_target->SetActorValue(RE::ActorValue::kHealth, a_target->GetActorValue(RE::ActorValue::kHealth) - damage);
-
 	player->SetActorValue(RE::ActorValue::kHealth, a_target->GetActorValue(RE::ActorValue::kHealth) - damage * *Settings::ramSelfReduction);
 
-	//speed->SpeedUp(-1 * strength); // For every action, there is an equal and opposite reaction.
-	
-	ImpulseData impData{ a_target, player, strength, force };
+	if (!*Settings::enableSimulation) {
+		a_target->DispellEffectsWithArchetype(RE::MagicTarget::Archetype::kStagger, true);
+		a_target->AddSpell(force);
+		if (a_target->GetActorValue(RE::ActorValue::kHealth) <= damage) {
+			a_target->KillImpl(player, damage, true, true);
+		} else {
+			a_target->SetActorValue(RE::ActorValue::kHealth, a_target->GetActorValue(RE::ActorValue::kHealth) - damage);
+		}
+	} else {
+		//speed->SpeedUp(-1 * strength); // For every action, there is an equal and opposite reaction.
 
-	// send an impulse
-	const auto task = SKSE::GetTaskInterface();
-	task->AddTask([impData]() -> void
-	{
-		std::thread impulse([impData]() -> void
+		GetSingleton()->simulate = true;
+		ImpulseData impData{a_target, player, force};
+		// send an impulse
+		const auto task = SKSE::GetTaskInterface();
+		task->AddTask([impData, strength]() -> void
 		{
-			double theta;
-			double phi;
+			std::thread impulse([impData, strength]() -> void
 			{
-				Coord3 Points[]{
-					{
-						impData.source->GetPositionX(),
-						impData.source->GetPositionY(),
-						impData.source->GetPositionZ()
-					},
-					{
-						impData.target->GetPositionX(),
-						impData.target->GetPositionY(),
-						impData.target->GetPositionZ()
+				double theta;
+				double phi;
+				{
+					Coord3 Points[]{
+						{
+							impData.source->GetPositionX(),
+							impData.source->GetPositionY(),
+							impData.source->GetPositionZ()
+						},
+						{
+							impData.target->GetPositionX(),
+							impData.target->GetPositionY(),
+							impData.target->GetPositionZ()
+						}
+					};
+					theta = CalcAngle3D(Points[0], Points[1]);
+					phi = CalcAngle2D(Points[0], Points[1]);
+				}
+				_DMESSAGE("%f %f", strength, IMPULSE_ACCELERATION_VEC(theta, phi));
+
+				const auto xVelocity = strength * cos(theta) * cos(phi);
+				const auto yVelocity = strength * cos(theta) * sin(phi);
+				const auto zVelocity = strength * sin(theta);
+				_DMESSAGE("\n%f\n%f\n%f", xVelocity, yVelocity, zVelocity);
+
+				const auto xDisplacement = IMPULSE_TO_DISPLACEMENT(xVelocity, IMPULSE_DAMPING);
+				const auto yDisplacement = IMPULSE_TO_DISPLACEMENT(yVelocity, IMPULSE_DAMPING);
+				const auto zDisplacement = IMPULSE_TO_DISPLACEMENT(zVelocity, IMPULSE_GRAVITY);
+				_DMESSAGE("\n%f\n%f\n%f", xDisplacement, yDisplacement, zDisplacement);
+				
+				auto ui = RE::UI::GetSingleton();
+				while (!ui->GameIsPaused() && impData.target->GetActorValue(RE::ActorValue::kHealth) > 0) {
+					if (!GetSingleton()->simulate) {
+						return;
 					}
-				};
-				theta = CalcAngle3D(Points[0], Points[1]);
-				phi = CalcAngle2D(Points[0], Points[1]);
-			}
-			
-			const auto xVelocity = impData.strength * cos(theta) * cos(phi) / 60;
-			const auto yVelocity = impData.strength * cos(theta) * sin(phi) / 60;
-			const auto zVelocity = impData.strength * sin(theta) / 60;
-			
-			_DMESSAGE("\n%f\n%f\n%f", xVelocity, yVelocity, zVelocity);
 
-			const auto xDisplacement = xVelocity * IMPULSE_KEY_PER_FRAME;
-			const auto yDisplacement = yVelocity * IMPULSE_KEY_PER_FRAME;
-			const auto zDisplacement = zVelocity * IMPULSE_KEY_PER_FRAME;
+					auto iter = 0;
 
-			_DMESSAGE("\n%f\n%f\n%f", xDisplacement, yDisplacement, zDisplacement);
-			
-			auto ui = RE::UI::GetSingleton();
-			auto iter = 0;
-			while (!ui->GameIsPaused() || iter > 300) {
-				impData.target->DispellEffectsWithArchetype(RE::MagicTarget::Archetype::kStagger, true);
+					impData.target->DispellEffectsWithArchetype(RE::MagicTarget::Archetype::kStagger, true);
 
-				impData.target->AddSpell(impData.force);
+					impData.target->AddSpell(impData.force);
 
-				impData.target->data.location.x += xDisplacement;
-				impData.target->data.location.y += yDisplacement;
-				impData.target->data.location.z += zDisplacement;
+					while (iter < 31) {
+						impData.target->data.location.x += xDisplacement;
+						impData.target->data.location.y += yDisplacement;
+						//impData.target->data.location.z += zDisplacement;
 
-				std::this_thread::sleep_for(std::chrono::milliseconds(16));
-				++iter;
-			}
-
+						std::this_thread::sleep_for(std::chrono::milliseconds(16));
+						++iter;
+					}
+				}
 			});
-		impulse.detach();
-	});
+			impulse.detach();
+		});
+	}
 }

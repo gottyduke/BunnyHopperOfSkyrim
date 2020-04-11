@@ -8,14 +8,12 @@ class Controller
 public:
 	static Controller* GetSingleton();
 
-	void TryAccelerate();
-	void TestHeightBonus();
-	void CaptureStrafe();
-	void TestStrafeBonus();
-	void TryCrouchBoost();
-	void TryInitRam();
+	void OnJumping();
+	void OnFalling();
+	void OnLanding();
+	void OnGround();
+	void OnDelete();
 	
-	void CountStop();
 	void HaltProcess();
 
 	void ResetCounter() noexcept { stopCounter = 0; }

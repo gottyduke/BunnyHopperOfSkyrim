@@ -6,7 +6,7 @@
 
 
 namespace
-{
+{	
 	struct Coord2
 	{
 		float x;

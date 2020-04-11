@@ -15,66 +15,68 @@ auto Controller::GetSingleton()
 }
 
 
-void Controller::TryAccelerate()
-{	
-	auto Speed = SpeedController::GetSingleton();
-	auto Height = HeightController::GetSingleton();
-
-	Speed->SpeedUp();
-	Height->GainHeightBonus();
-	
-	ResetCounter();
-}
-
-
-void Controller::TestHeightBonus()
+void Controller::OnJumping()
 {
-	auto Height = HeightController::GetSingleton();
-
-	Height->CalcHeightDiff();
-	Height->InitState(Height->GetLastState());
-}
-
-
-void Controller::CaptureStrafe()
-{	
 	auto Strafe = StrafeController::GetSingleton();
-
 	Strafe->TryStrafe();
 }
 
 
-void Controller::TestStrafeBonus()
-{	
+void Controller::OnFalling()
+{
+	auto Speed = SpeedController::GetSingleton();
+	auto Height = HeightController::GetSingleton();
 	auto Strafe = StrafeController::GetSingleton();
+
+	Speed->SpeedUp();
+	Height->GainHeightBonus();
+
+	ResetCounter();
 
 	Strafe->CalcDipChange();
 	Strafe->GainStrafeBonud();
 }
 
 
-void Controller::TryCrouchBoost()
+void Controller::OnLanding()
 {
 	auto Crouch = CrouchController::GetSingleton();
-
+	auto Height = HeightController::GetSingleton();
+	auto Ram = RamController::GetSingleton();
+	auto Strafe = StrafeController::GetSingleton();
+	
 	Crouch->GainCrouchBonus();
+
+	Height->CalcHeightDiff();
+	Height->InitState(Height->GetLastState());
+
+	Ram->TestRam();
+	
+	Strafe->CalcDipChange();
+	Strafe->GainStrafeBonud();
 }
 
 
-void Controller::TryInitRam()
+void Controller::OnGround()
 {
+	if (++stopCounter >= *Settings::misttepAllowed) {
+		ResetCounter();
+		HaltProcess();
+	}
+	
+	auto Height = HeightController::GetSingleton();
 	auto Ram = RamController::GetSingleton();
+
+	Height->CalcHeightDiff();
+	Height->InitState(Height->GetLastState());
 
 	Ram->TestRam();
 }
 
 
-void Controller::CountStop()
-{	
-	if (++stopCounter >= *Settings::misttepAllowed) {
-		ResetCounter();
-		HaltProcess();
-	}
+void Controller::OnDelete()
+{
+	HaltProcess();
 }
 
 
