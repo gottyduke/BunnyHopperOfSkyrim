@@ -24,6 +24,10 @@ void HeightController::Update() noexcept
 	}
 
 	bhk->jumpHeight = currJumpHeight;
+
+#ifdef DUMP
+	_DMESSAGE("Height-Bonus %f", currJumpHeight);
+#endif
 }
 
 
@@ -47,8 +51,8 @@ void HeightController::CalcHeightDiff()
 // distinguish : This HeightBonus is kJumpHeight not HeightLaunch
 void HeightController::GainHeightBonus()
 {
-	const auto Speed = SpeedController::GetSingleton();
-	const auto bonusHeight = Speed->GetCurrSpeed() / 1000;
+	const auto speed = SpeedController::GetSingleton();
+	const auto bonusHeight = speed->GetCurrSpeed() / 1000;
 
 	if (currJumpHeight < baseJumpHeight + bonusHeight) {
 		currJumpHeight = baseJumpHeight + bonusHeight;
@@ -84,11 +88,20 @@ void HeightController::InitState(const State a_state)
 
 void HeightController::TryHeightLaunch() const
 {
-	const auto Speed = SpeedController::GetSingleton();
+	const auto speed = SpeedController::GetSingleton();
 	const auto diff = player->GetPositionZ() - pos;
+	if (diff <= 0) {
+		return;
+	}
 	
-	Speed->SpeedUp(*Settings::globalSpeedMult * *Settings::heightLaunchMult * fabs(diff));
+	const auto heightBonus = *Settings::globalSpeedMult * *Settings::heightLaunchMult * diff;
+	
+	speed->SpeedUp(heightBonus);
 	// GFx Notify("HeightLaunch")
+	
+#ifdef DUMP
+	_DMESSAGE("Height-Launch %f %f", diff, heightBonus);
+#endif
 }
 
 

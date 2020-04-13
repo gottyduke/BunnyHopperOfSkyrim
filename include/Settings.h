@@ -13,7 +13,7 @@ public:
 	static J2S::fSetting globalSpeedMult;
 	static J2S::fSetting maxSpeed;
 	static J2S::iSetting misttepAllowed;
-
+	
 	// base
 	static J2S::fSetting baseSpeedBoost;
 	static J2S::fSetting baseSpeedMult;
@@ -37,11 +37,14 @@ public:
 	static J2S::fSetting ramDamage;
 	static J2S::fSetting ramDamageMult;
 	static J2S::fSetting ramSpeedThreshold;
-	static J2S::fSetting ramSelfReduction;
-	static J2S::bSetting enableSimulation;
+	static J2S::fSetting ramSpeedReduction;
 	
 	// visual
 	static J2S::bSetting enableTrail;
+	static J2S::bSetting enableJumpFeedback;
+
+	// simulation
+	static J2S::bSetting enableSimulation;
 	
 	Settings() = delete;
 

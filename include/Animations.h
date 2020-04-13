@@ -10,8 +10,8 @@ enum class Anim : std::uint64_t
 	kUp = hash_64_fnv1a_const("jumpup"),
 	kFall = hash_64_fnv1a_const("jumpfall"),
 	kFallDirectional = hash_64_fnv1a_const("jumpfalldirectional"),
-	kLandEnd = hash_64_fnv1a_const("jumplandend"),
 	kDown = hash_64_fnv1a_const("jumpdown"),
+	kLandEnd = hash_64_fnv1a_const("jumplandend"),
 	kFootLeft = hash_64_fnv1a_const("footleft"),
 	kFootRight = hash_64_fnv1a_const("footright"),
 	kGraphDeleting = hash_64_fnv1a_const("graphdeleting")

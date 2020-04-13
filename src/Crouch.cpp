@@ -19,7 +19,7 @@ void CrouchController::GainCrouchBonus()
 {
 	Update();
 
-	if (cooldown <= 0) {
+	if (cooldown <= 0 && player->IsSneaking()) {
 		const auto CrouchBonus = *Settings::globalSpeedMult * *Settings::crouchBoostMult * *Settings::crouchSpeedBoost;
 
 		auto Speed = SpeedController::GetSingleton();
@@ -27,6 +27,9 @@ void CrouchController::GainCrouchBonus()
 
 		Reset();
 
+#ifdef DUMP
+		_DMESSAGE("Crouch-Bonus %f", CrouchBonus);
+#endif
 		// GFx Notify("CrouchBonus")
 	} else {
 		// GFx Notify("CrouchCooldown")

@@ -1,11 +1,11 @@
 #include "Ram.h"
-#include "Speed.h" // SpeedController
+#include "Speed.h"  // SpeedController
 #include "Settings.h"  // Settings
 
-#include <thread>
-#include <chrono>
+#include <thread>  // thread
+#include <chrono>  // chrono
 
-#include "SKSE/API.h"
+#include "SKSE/RegistrationSet.h"  // TaskInterface
 
 
 void RamController::Reset() noexcept
@@ -21,6 +21,10 @@ void RamController::Update() noexcept
 	for (const auto& ref : cellRefset) {
 		const auto actor = RE::TESForm::LookupByID<RE::Actor>(ref->GetFormID());
 		if (actor && !actor->IsPlayer() && !actor->IsPlayerRef()) {
+			if (actor->GetActorValue(RE::ActorValue::kHealth) <= 0) {
+				actor->KillImpl(player, 0, true, true);
+				return;
+			}
 			TestRange(actor);
 		}
 	}
@@ -29,45 +33,43 @@ void RamController::Update() noexcept
 
 void RamController::TestRam()
 {
-	const auto Speed = SpeedController::GetSingleton();
+	const auto speed = SpeedController::GetSingleton();
 
-	Update();
-	if (Speed->GetCurrSpeed() >= *Settings::ramSpeedThreshold) {
-		//Update();
+	if (speed->GetCurrSpeed() >= *Settings::ramSpeedThreshold) {
+		Update();
 	}
 }
 
 
 void RamController::TestRange(RE::Actor* a_actor) const noexcept
 {
+	if (a_actor->IsPlayerTeammate()) {
+		return;
+	}
+	if (!a_actor->Is3DLoaded()) {
+		return;
+	}
 	if (player->GetPositionZ() - a_actor->GetPositionZ() >= 64.0f) {
 		return;
 	}
 
-	if (!a_actor->Is3DLoaded()) {
-		return;
-	}
-
-	const float distance = CalcDistance2D(
-		Coord2{
+	const auto distance = CalcDistance(
+		Vector{
 			player->GetPositionX(),
 			player->GetPositionY()},
-		Coord2{
+		Vector{
 			a_actor->GetPositionX(),
 			a_actor->GetPositionY()});
-	
+
 	if (distance < 24.0f || distance > 60.0f) {
 		return;
 	}
 
-	if (distance <= 44.0f) {
-		_DMESSAGE("Rammed %s %x", a_actor->GetName(), a_actor->GetFormID());
+	if (distance <= 48.0f) {
 		hkp->ApplyForce(a_actor, 1.0f);
-	} else if (distance <= 55.0f) {
-		_DMESSAGE("Knockback %s %x", a_actor->GetName(), a_actor->GetFormID());
+	} else if (distance <= 60.0f) {
 		hkp->ApplyForce(a_actor, 0.5f);
-	} else if (distance <= 66.0f) {
-		_DMESSAGE("Swingby %s %x", a_actor->GetName(), a_actor->GetFormID());
+	} else if (distance <= 72.0f) {
 		hkp->ApplyForce(a_actor, 0.1f);
 	}
 }
@@ -76,7 +78,7 @@ void RamController::TestRange(RE::Actor* a_actor) const noexcept
 RamController::ForceImpl::ForceImpl()
 {
 	force = RE::IFormFactory::GetConcreteFormFactoryByType<RE::SpellItem>()->Create();
-	force->Copy(RE::TESForm::LookupByID<RE::SpellItem>(0x00013F3A));
+	force->Copy(RE::TESForm::LookupByID(0x00013F3A));
 
 	// selfcast
 	force->data.spellType = RE::MagicSystem::SpellType::kAbility;
@@ -94,56 +96,60 @@ void RamController::ForceImpl::ApplyForce(RE::Actor* a_target, const float a_mul
 {
 	const auto speed = SpeedController::GetSingleton();
 	const auto player = RE::PlayerCharacter::GetSingleton();
+	const auto task = SKSE::GetTaskInterface();
 
-	const float strength = a_mult * (speed->GetCurrSpeed() + *Settings::ramSpeedThreshold);
+	const float strength = a_mult * (speed->GetCurrSpeed() - *Settings::ramSpeedThreshold);
 	const float damage = strength * *Settings::ramDamage * *Settings::ramDamageMult;
 
 	force->effects[0]->effectItem.magnitude = strength;
+	
+	speed->SpeedUp(-*Settings::ramSpeedReduction * strength); // For every action, there is an equal and opposite reaction
 
-	player->SetActorValue(RE::ActorValue::kHealth, a_target->GetActorValue(RE::ActorValue::kHealth) - damage * *Settings::ramSelfReduction);
+	a_target->SetActorValue(RE::ActorValue::kHealth, a_target->GetActorValue(RE::ActorValue::kHealth) - damage);
 
-	if (!*Settings::enableSimulation) {
-		a_target->DispellEffectsWithArchetype(RE::MagicTarget::Archetype::kStagger, true);
-		a_target->AddSpell(force);
-		if (a_target->GetActorValue(RE::ActorValue::kHealth) <= damage) {
-			a_target->KillImpl(player, damage, true, true);
-		} else {
-			a_target->SetActorValue(RE::ActorValue::kHealth, a_target->GetActorValue(RE::ActorValue::kHealth) - damage);
-		}
-	} else {
-		//speed->SpeedUp(-1 * strength); // For every action, there is an equal and opposite reaction.
-
+	ImpulseData impData{a_target, player, force};
+	if (true || !*Settings::enableSimulation) {
+		task->AddTask([impData, damage]() -> void
+		{
+			std::thread ragdoll([impData, damage]() -> void
+			{
+				impData.target->DispellEffectsWithArchetype(RE::MagicTarget::Archetype::kStagger, true);
+				impData.target->AddSpell(impData.force);
+				
+				std::this_thread::sleep_for(std::chrono::seconds(3));
+			});
+			ragdoll.detach();
+		});
+	} else { // motion simulation is still under development
 		GetSingleton()->simulate = true;
-		ImpulseData impData{a_target, player, force};
 		// send an impulse
-		const auto task = SKSE::GetTaskInterface();
 		task->AddTask([impData, strength]() -> void
 		{
 			std::thread impulse([impData, strength]() -> void
 			{
-				double theta;
-				double phi;
+				float theta;
+				float phi;
 				{
-					Coord3 Points[]{
-						{
-							impData.source->GetPositionX(),
-							impData.source->GetPositionY(),
-							impData.source->GetPositionZ()
-						},
-						{
-							impData.target->GetPositionX(),
-							impData.target->GetPositionY(),
-							impData.target->GetPositionZ()
-						}
+					Vector source
+					{
+						impData.source->GetPositionX(),
+						impData.source->GetPositionY(),
+						impData.source->GetPositionZ()
 					};
-					theta = CalcAngle3D(Points[0], Points[1]);
-					phi = CalcAngle2D(Points[0], Points[1]);
+					Vector target{
+						impData.target->GetPositionX(),
+						impData.target->GetPositionY(),
+						impData.target->GetPositionZ()
+					};
+		
+					theta = CalcAngle3D(source, target);
+					phi = CalcAngle2D(source, target);
 				}
 				_DMESSAGE("%f %f", strength, IMPULSE_ACCELERATION_VEC(theta, phi));
 
-				const auto xVelocity = strength * cos(theta) * cos(phi);
-				const auto yVelocity = strength * cos(theta) * sin(phi);
-				const auto zVelocity = strength * sin(theta);
+				const auto xVelocity = strength * cosf(theta) * cosf(phi);
+				const auto yVelocity = strength * cosf(theta) * sinf(phi);
+				const auto zVelocity = strength * sinf(theta);
 				_DMESSAGE("\n%f\n%f\n%f", xVelocity, yVelocity, zVelocity);
 
 				const auto xDisplacement = IMPULSE_TO_DISPLACEMENT(xVelocity, IMPULSE_DAMPING);
@@ -163,7 +169,7 @@ void RamController::ForceImpl::ApplyForce(RE::Actor* a_target, const float a_mul
 
 					impData.target->AddSpell(impData.force);
 
-					while (iter < 31) {
+					while (iter < 62) {
 						impData.target->data.location.x += xDisplacement;
 						impData.target->data.location.y += yDisplacement;
 						//impData.target->data.location.z += zDisplacement;

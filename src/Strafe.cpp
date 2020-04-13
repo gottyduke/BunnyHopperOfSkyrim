@@ -12,14 +12,14 @@ pos()
 
 void StrafeController::Reset() noexcept
 {
-	pos.x = player->GetPositionX();
-	pos.y = player->GetPositionY();
+	pos.m128_f32[0] = player->GetPositionX();
+	pos.m128_f32[1] = player->GetPositionY();
 }
 
 
 void StrafeController::Update() noexcept
 {
-	diff = CalcAngle2D(Coord2{ player->GetPositionX(), player->GetPositionY() }, pos);
+	diff = CalcAngle2D(Vector{ player->GetPositionX(), player->GetPositionY() }, pos);
 }
 
 
@@ -39,21 +39,24 @@ void StrafeController::CalcDipChange()
 }
 
 
-void StrafeController::GainStrafeBonud() const
+void StrafeController::GainStrafeBonud()
 {
 	if (_isnanf(diff)) {
 		return;
 	}
+
+	diff *= 180.0 / 3.14159265358979323846;
 	
 	if (diff >= *Settings::minStrafeAngle) {
-		auto Speed = SpeedController::GetSingleton();
-		auto StrafeBonus = diff >= *Settings::maxStrafeAngle
-			                         ? *Settings::maxStrafeAngle - *Settings::strafeDeadzone
-			                         : diff - *Settings::strafeDeadzone;
+		auto speed = SpeedController::GetSingleton();
+		const auto angle = (diff >= *Settings::maxStrafeAngle ? *Settings::maxStrafeAngle : diff) - *Settings::strafeDeadzone;
+		const auto strafeBonus = *Settings::globalSpeedMult * *Settings::strafeSpeedMult * angle / 3;
 
-		// bi-directional
-		StrafeBonus /= 4;
-		Speed->SpeedUp(*Settings::globalSpeedMult * *Settings::strafeSpeedMult * StrafeBonus);
+		speed->SpeedUp(strafeBonus);
 		// GFx Notify("StrafeBonus")
+
+#ifdef DUMP
+		_DMESSAGE("Strafe-Bonus %f %f", angle, strafeBonus);
+#endif
 	}
 }

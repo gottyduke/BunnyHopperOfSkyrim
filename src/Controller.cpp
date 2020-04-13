@@ -5,6 +5,9 @@
 #include "Ram.h"
 #include "Speed.h"
 #include "Strafe.h"
+#include "Visual.h"
+
+#include "Settings.h"
 
 
 auto Controller::GetSingleton()
@@ -19,19 +22,23 @@ void Controller::OnJumping()
 {
 	auto Strafe = StrafeController::GetSingleton();
 	Strafe->TryStrafe();
+	
+	ResetCounter();
 }
 
 
 void Controller::OnFalling()
 {
-	auto Speed = SpeedController::GetSingleton();
 	auto Height = HeightController::GetSingleton();
+	auto Ram = RamController::GetSingleton();
+	auto Speed = SpeedController::GetSingleton();
 	auto Strafe = StrafeController::GetSingleton();
 
-	Speed->SpeedUp();
 	Height->GainHeightBonus();
 
-	ResetCounter();
+	Ram->TestRam();
+	
+	Speed->SpeedUp();
 
 	Strafe->CalcDipChange();
 	Strafe->GainStrafeBonud();
@@ -44,7 +51,8 @@ void Controller::OnLanding()
 	auto Height = HeightController::GetSingleton();
 	auto Ram = RamController::GetSingleton();
 	auto Strafe = StrafeController::GetSingleton();
-	
+	auto Visual = VisualController::GetSingleton();
+
 	Crouch->GainCrouchBonus();
 
 	Height->CalcHeightDiff();
@@ -54,6 +62,9 @@ void Controller::OnLanding()
 	
 	Strafe->CalcDipChange();
 	Strafe->GainStrafeBonud();
+
+	Visual->ApplyEffect();
+	Visual->RenderTrail();
 }
 
 

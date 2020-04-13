@@ -17,7 +17,7 @@ public:
 	// methods
 	void TryStrafe();
 	void CalcDipChange();
-	void GainStrafeBonud() const;
+	void GainStrafeBonud();
 	void Halt() noexcept override { Reset(); }
 	
 	StrafeController(const StrafeController&) = delete;
@@ -34,5 +34,5 @@ private:
 
 	float scale;
 	float diff;
-	Coord2 pos;
+	Vector pos;
 };

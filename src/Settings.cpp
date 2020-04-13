@@ -25,7 +25,7 @@ decltype(Settings::maxStrafeAngle) Settings::maxStrafeAngle("maxStrafeAngle", 85
 decltype(Settings::strafeDeadzone) Settings::strafeDeadzone("strafeDeadzone", 35.0f);
 decltype(Settings::strafeSpeedMult) Settings::strafeSpeedMult("strafeSpeedMult", 1.0f);
 
-decltype(Settings::minHeightLaunch) Settings::minHeightLaunch("minHeightLaunch", 5.0f);
+decltype(Settings::minHeightLaunch) Settings::minHeightLaunch("minHeightLaunch", 140.0f);
 decltype(Settings::heightLaunchMult) Settings::heightLaunchMult("heightLaunchMult", 1.0f);
 
 decltype(Settings::crouchSpeedBoost) Settings::crouchSpeedBoost("crouchSpeedBoost", 3.0f);
@@ -36,7 +36,8 @@ decltype(Settings::crouchBoostCooldown) Settings::crouchBoostCooldown("crouchBoo
 decltype(Settings::ramDamage) Settings::ramDamage("ramDamage", 5.0f);
 decltype(Settings::ramDamageMult) Settings::ramDamageMult("ramDamageMult", 0.2f);
 decltype(Settings::ramSpeedThreshold) Settings::ramSpeedThreshold("ramSpeedThreshold", 220.0f);
-decltype(Settings::ramSelfReduction) Settings::ramSelfReduction("ramSelfReduction", 0.5f);
-decltype(Settings::enableSimulation) Settings::enableSimulation("enableSimulation", false);
+decltype(Settings::ramSpeedReduction) Settings::ramSpeedReduction("ramSpeedReduction", 0.5f);
 
 decltype(Settings::enableTrail) Settings::enableTrail("enableTrail", true);
+decltype(Settings::enableJumpFeedback) Settings::enableJumpFeedback("enableJumpFeedback", true);
+decltype(Settings::enableSimulation) Settings::enableSimulation("enableSimulation", false);

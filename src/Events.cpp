@@ -50,7 +50,7 @@ namespace Events
 		if (--safeStartCountdown >= 0) {
 			controller->HaltProcess();
 		}
-		
+
 		switch (HashAnimation(a_event->tag)) {
 		case Anim::kUp:
 			{
@@ -59,16 +59,16 @@ namespace Events
 			break;
 		case Anim::kFall:
 		case Anim::kFallDirectional:
-		case Anim::kDown:
 			{
 				controller->OnFalling();
 			}
 			break;
-		case Anim::kLandEnd:
+		case Anim::kDown:
 			{
 				controller->OnLanding();
 			}
 			break;
+		case Anim::kLandEnd:
 		case Anim::kFootLeft:
 		case Anim::kFootRight:
 			{

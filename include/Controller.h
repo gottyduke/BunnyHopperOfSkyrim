@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Settings.h"
-
 
 class Controller
 {
@@ -13,7 +11,6 @@ public:
 	void OnLanding();
 	void OnGround();
 	void OnDelete();
-	
 	void HaltProcess();
 
 	void ResetCounter() noexcept { stopCounter = 0; }
@@ -27,5 +24,6 @@ public:
 	Controller& operator=(Controller&&) = delete;
 
 private:
-	int stopCounter = 2147483646;
+	
+	unsigned stopCounter = static_cast<unsigned>(-1);
 };
