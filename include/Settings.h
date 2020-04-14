@@ -40,11 +40,9 @@ public:
 	static J2S::fSetting ramSpeedReduction;
 	
 	// visual
-	static J2S::bSetting enableTrail;
 	static J2S::bSetting enableJumpFeedback;
-
-	// simulation
-	static J2S::bSetting enableSimulation;
+	static J2S::bSetting enableFovZoom;
+	static J2S::bSetting enableTremble;
 	
 	Settings() = delete;
 

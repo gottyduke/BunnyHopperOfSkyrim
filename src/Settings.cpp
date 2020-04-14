@@ -17,27 +17,27 @@ decltype(Settings::globalSpeedMult) Settings::globalSpeedMult("globalSpeedMult",
 decltype(Settings::maxSpeed) Settings::maxSpeed("maxSpeed", 450.0f);
 decltype(Settings::misttepAllowed) Settings::misttepAllowed("misstepAllowed", 4);
 
-decltype(Settings::baseSpeedBoost) Settings::baseSpeedBoost("baseSpeedBoost", 3.0f);
+decltype(Settings::baseSpeedBoost) Settings::baseSpeedBoost("baseSpeedBoost", 1.0f);
 decltype(Settings::baseSpeedMult) Settings::baseSpeedMult("baseSpeedMult", 1.0f);
 
 decltype(Settings::minStrafeAngle) Settings::minStrafeAngle("minStrafeAngle", 35.0f);
-decltype(Settings::maxStrafeAngle) Settings::maxStrafeAngle("maxStrafeAngle", 85.0f);
+decltype(Settings::maxStrafeAngle) Settings::maxStrafeAngle("maxStrafeAngle", 95.0f);
 decltype(Settings::strafeDeadzone) Settings::strafeDeadzone("strafeDeadzone", 35.0f);
-decltype(Settings::strafeSpeedMult) Settings::strafeSpeedMult("strafeSpeedMult", 1.0f);
+decltype(Settings::strafeSpeedMult) Settings::strafeSpeedMult("strafeSpeedMult", 0.3f);
 
 decltype(Settings::minHeightLaunch) Settings::minHeightLaunch("minHeightLaunch", 140.0f);
-decltype(Settings::heightLaunchMult) Settings::heightLaunchMult("heightLaunchMult", 1.0f);
+decltype(Settings::heightLaunchMult) Settings::heightLaunchMult("heightLaunchMult", 0.6f);
 
-decltype(Settings::crouchSpeedBoost) Settings::crouchSpeedBoost("crouchSpeedBoost", 3.0f);
+decltype(Settings::crouchSpeedBoost) Settings::crouchSpeedBoost("crouchSpeedBoost", 32.0f);
 decltype(Settings::crouchBoostMult) Settings::crouchBoostMult("crouchBoostMult", 1.0f);
 decltype(Settings::crouchBoostCooldown) Settings::crouchBoostCooldown("crouchBoostCooldown", 6);
 
 
 decltype(Settings::ramDamage) Settings::ramDamage("ramDamage", 5.0f);
-decltype(Settings::ramDamageMult) Settings::ramDamageMult("ramDamageMult", 0.2f);
+decltype(Settings::ramDamageMult) Settings::ramDamageMult("ramDamageMult", 0.3f);
 decltype(Settings::ramSpeedThreshold) Settings::ramSpeedThreshold("ramSpeedThreshold", 220.0f);
 decltype(Settings::ramSpeedReduction) Settings::ramSpeedReduction("ramSpeedReduction", 0.5f);
 
-decltype(Settings::enableTrail) Settings::enableTrail("enableTrail", true);
 decltype(Settings::enableJumpFeedback) Settings::enableJumpFeedback("enableJumpFeedback", true);
-decltype(Settings::enableSimulation) Settings::enableSimulation("enableSimulation", false);
+decltype(Settings::enableFovZoom) Settings::enableFovZoom("enableFovZoom", true);
+decltype(Settings::enableTremble) Settings::enableTremble("enableTremble", false);

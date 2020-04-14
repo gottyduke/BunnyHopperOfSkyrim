@@ -16,40 +16,12 @@
 
 #include "IController.h"
 
-#include <atomic>  // atomic
-
 #include "RE/Skyrim.h"
 
 
 class RamController final : public IController
 {
 public:
-	// RE::hkpMotion not implemented yet, this is script-level fake
-	class ForceImpl
-	{
-	public:
-		struct ImpulseData
-		{
-			RE::Actor* target;
-			RE::Actor* source;
-			RE::SpellItem* force;
-		};
-		STATIC_ASSERT(sizeof(ImpulseData) == 0x18);
-
-		ForceImpl();
-
-		void ApplyForce(RE::Actor* a_target, float a_mult) const;
-		
-		ForceImpl(const ForceImpl&) = delete;
-		ForceImpl(ForceImpl&&) = delete;
-		ForceImpl& operator=(const ForceImpl&) = delete;
-		ForceImpl& operator=(ForceImpl&&) = delete;
-		
-	private:
-		RE::SpellItem* force;
-	};
-
-	
 	static RamController* GetSingleton()
 	{
 		static RamController singleton;
@@ -57,25 +29,22 @@ public:
 	}
 
 	void TestRam();
-	
-	void Halt() noexcept override { Reset(); }
 
+	void Halt() noexcept override { Reset(); }
 
 	RamController(const RamController&) = delete;
 	RamController(RamController&&) = delete;
-	RamController() { hkp = new ForceImpl(); }
-	~RamController() { delete hkp; }
+	RamController() = default;
+	~RamController() = default;
 
 	RamController& operator=(const RamController&) = delete;
 	RamController& operator=(RamController&&) = delete;
 
 private:
 	void TestRange(RE::Actor* a_actor) const noexcept;
-	
+	void ApplyForce(RE::Actor* a_target, float a_mult) const;
+
 	void Reset() noexcept override;
 	void Update() noexcept override;
-	
-	ForceImpl* hkp;
-	std::atomic<bool> simulate{true};
 };
-STATIC_ASSERT(sizeof(RamController) == 0x30);
+STATIC_ASSERT(sizeof(RamController) == 0x20);

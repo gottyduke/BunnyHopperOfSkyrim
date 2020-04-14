@@ -1,5 +1,7 @@
 #pragma once
-#define DUMP
+//#define DUMP
+
+#include <immintrin.h>  // SIMD
 
 #include "RE/Skyrim.h"
 

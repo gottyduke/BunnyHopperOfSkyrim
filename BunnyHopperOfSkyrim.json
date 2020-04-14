@@ -11,8 +11,8 @@
   "strafeDeadzone": 35.0,
   "strafeSpeedMult": 0.3,
 
-  "minHeightLaunch": 170.0,
-  "heightLaunchMult": 0.3,
+  "minHeightLaunch": 140.0,
+  "heightLaunchMult": 0.6,
 
   "crouchSpeedBoost": 32.0,
   "crouchBoostMult": 1.0,
@@ -23,7 +23,7 @@
   "ramSpeedThreshold": 220.0,
   "ramSpeedReduction": 0.5,
 
-  "enableTrail": true,
   "enableJumpFeedback": true,
-  "enableSimulation": false
+  "enableFovZoom": true,
+  "enableTremble": false
 }

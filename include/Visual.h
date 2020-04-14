@@ -8,14 +8,19 @@
 class VisualController final : public IController
 {
 public:
+	enum class State : UInt32
+	{
+		kFirstPerson = 901943132160,
+		kThirdPerson = 901943132169
+	};
+	
 	static VisualController* GetSingleton()
 	{
 		static VisualController singleton;
 		return std::addressof(singleton);
 	}
-
+	
 	void ApplyEffect();
-	void RenderTrail();
 	
 	void Halt() noexcept override { Reset(); }
 

@@ -1,22 +1,24 @@
 #include "Visual.h"
 #include "Settings.h"  // Settings
 
-#include <thread>
-#include <chrono>
+#include <thread>  // thread
+#include <chrono>  // chrono
 
 #include "RE/Skyrim.h"
 #include "SKSE/RegistrationSet.h"  // TaskInterface
+#include "Speed.h"
 
 
 void VisualController::Reset() noexcept
 {
 	bhkOffsetCountdown = 4;
-	bhk->direction.quad = { 0.0f, 0.0f, 1.0144f, 0.0f };
+	bhk->direction.quad.m128_f32[2] = 1.0144f;
 }
 
 
 void VisualController::Update() noexcept
 {
+	
 }
 
 
@@ -26,33 +28,41 @@ void VisualController::ApplyEffect()
 		return;
 	}
 
-	// serious visual artifacts
-	bhk->direction.quad = _mm_add_ps(bhk->direction.quad, { 0.0f, 0.0f, 1.0f, 0.0f });
-
-	Update();
-	
-	if (--bhkOffsetCountdown <= 0) {
+	if (State(camera->currentState->id) == State::kThirdPerson) {
 		Reset();
+		return;
+	}
+	
+	if (*Settings::enableFovZoom) {
+		const auto task = SKSE::GetTaskInterface();
+		task->AddTask([]() -> void
+		{
+			std::thread zoom([]() -> void
+			{
+				auto camera = RE::PlayerCamera::GetSingleton();
+				
+				auto qtframe = 0;
+				while (qtframe < 32) {
+					camera->worldFOV += qtframe >= 16 ? 0.1f : -0.1f;
+					
+					std::this_thread::sleep_for(std::chrono::milliseconds(4));
+					++qtframe;
+				}
+			});
+			zoom.detach();
+		});
 	}
 
+	if (*Settings::enableTremble) {
+		// may cause serious visual artifact
+		bhk->direction.quad.m128_f32[2] += 0.5f;
+		
+		if (--bhkOffsetCountdown < 0) {
+			Reset();
+		}
+	}
+	
 #ifdef DUMP
 	_DMESSAGE("Visual-ApplyEffect");
 #endif
 }
- 
-
-void VisualController::RenderTrail()
-{
-	if (!*Settings::enableTrail) {
-		return;
-	}
-
-	// how do I achieve this within skse?
-	
-	Update();
-	
-#ifdef DUMP
-	_DMESSAGE("Visual-RenderTrail");
-#endif
-}
-

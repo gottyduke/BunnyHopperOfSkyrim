@@ -64,7 +64,6 @@ void Controller::OnLanding()
 	Strafe->GainStrafeBonud();
 
 	Visual->ApplyEffect();
-	Visual->RenderTrail();
 }
 
 

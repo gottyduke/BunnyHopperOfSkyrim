@@ -24,6 +24,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="BunnyHopperOfSkyrim.json" />
     <None Include="exports.def" />
   </ItemGroup>
   <ItemGroup>

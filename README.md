@@ -28,5 +28,6 @@ Setting | Type | Default | Description
 `ramDamageMult` | float | 0.2 | Ram damage multiplier based on current speed
 `ramSpeedThreshold` | float | 220.0 | Minimum speed required to initiate ram
 `ramSpeedReduction` | float | 0.5 | Speed loss multiplier after ramming
-`enableTrail` | bool | true | Enable the visiable ray trail when bhopping
-`enableSimulation` | bool | fasle | Use implmented motion system to simulate force & ragdoll instead of script level fake
+`enableJumpFeedback` | bool | true | Toggle overall jump feedback functionality
+`enableFovZoom` | bool | true | Enable the fov zoom effect for jump feedback
+`enableTremble` | bool | false | Enable the screen tremble effect for jump feedback (causes visual artifacts)
