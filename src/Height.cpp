@@ -3,7 +3,7 @@
 #include "Speed.h"
 #include "Settings.h"
 
-#include <cmath>  // fabs
+#include <cmath>  // fabsf
 
 
 void HeightController::Reset() noexcept
@@ -34,13 +34,16 @@ void HeightController::Update() noexcept
 void HeightController::CalcHeightDiff()
 {
 	const auto diff = player->GetPositionZ() - pos;
+	if (fabsf(diff) > 800) {
+		state = State::kNone;
+		return;
+	}
 	// average height for stairs & hills
 	if (diff >= 68.6f) {
 		state = State::kStair;
 		return;
 	}
-	if (diff < 0.0f && 
-		abs(diff) >= *Settings::minHeightLaunch) {
+	if (diff < 0.0f && fabsf(diff) >= *Settings::minHeightLaunch) {
 		state = State::kLaunch;
 		return;
 	}
@@ -90,17 +93,14 @@ void HeightController::TryHeightLaunch() const
 {
 	const auto speed = SpeedController::GetSingleton();
 	const auto diff = player->GetPositionZ() - pos;
-	if (diff <= 0) {
-		return;
-	}
 	
-	const auto heightBonus = *Settings::globalSpeedMult * *Settings::heightLaunchMult * diff;
+	const auto heightBonus = *Settings::globalSpeedMult * *Settings::heightLaunchMult * fabsf(diff);
 	
 	speed->SpeedUp(heightBonus);
 	// GFx Notify("HeightLaunch")
 	
 #ifdef DUMP
-	_DMESSAGE("Height-Launch %f %f", diff, heightBonus);
+	_DMESSAGE("Height-Launch %f %f", fabsf(diff), heightBonus);
 #endif
 }
 

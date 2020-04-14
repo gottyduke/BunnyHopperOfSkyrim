@@ -23,10 +23,10 @@ decltype(Settings::baseSpeedMult) Settings::baseSpeedMult("baseSpeedMult", 1.0f)
 decltype(Settings::minStrafeAngle) Settings::minStrafeAngle("minStrafeAngle", 35.0f);
 decltype(Settings::maxStrafeAngle) Settings::maxStrafeAngle("maxStrafeAngle", 95.0f);
 decltype(Settings::strafeDeadzone) Settings::strafeDeadzone("strafeDeadzone", 35.0f);
-decltype(Settings::strafeSpeedMult) Settings::strafeSpeedMult("strafeSpeedMult", 0.3f);
+decltype(Settings::strafeSpeedMult) Settings::strafeSpeedMult("strafeSpeedMult", 0.5f);
 
 decltype(Settings::minHeightLaunch) Settings::minHeightLaunch("minHeightLaunch", 140.0f);
-decltype(Settings::heightLaunchMult) Settings::heightLaunchMult("heightLaunchMult", 0.6f);
+decltype(Settings::heightLaunchMult) Settings::heightLaunchMult("heightLaunchMult", 0.5f);
 
 decltype(Settings::crouchSpeedBoost) Settings::crouchSpeedBoost("crouchSpeedBoost", 32.0f);
 decltype(Settings::crouchBoostMult) Settings::crouchBoostMult("crouchBoostMult", 1.0f);
