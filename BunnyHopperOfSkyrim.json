@@ -9,10 +9,10 @@
   "minStrafeAngle": 35.0,
   "maxStrafeAngle": 95.0,
   "strafeDeadzone": 35.0,
-  "strafeSpeedMult": 0.3,
+  "strafeSpeedMult": 1.0,
 
   "minHeightLaunch": 140.0,
-  "heightLaunchMult": 0.6,
+  "heightLaunchMult": 1.0,
 
   "crouchSpeedBoost": 32.0,
   "crouchBoostMult": 1.0,
